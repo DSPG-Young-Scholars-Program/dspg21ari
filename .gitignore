@@ -3,13 +3,6 @@
 *.xls
 *.RDS
 
- 
-
-/data
-*cache*
-
- 
-
 .Rproj.user
 .Rhistory
 .RData
