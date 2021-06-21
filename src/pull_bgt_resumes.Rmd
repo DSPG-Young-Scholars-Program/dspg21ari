@@ -135,17 +135,13 @@ ids <- job %>% distinct(id) %>% pull(id)
 
 con <- get_db_conn()
 
-cert <- DBI::dbGetQuery(con, "SELECT *
-FROM bgt_res.cert WHERE id IN (", paste(ids, collapse = ", "), ")"))
+cert <- DBI::dbGetQuery(con, paste("SELECT * FROM bgt_res.cert WHERE id IN (", paste(ids, collapse = ", "), ")"))
 
-ed <- DBI::dbGetQuery(con, "SELECT *
-FROM bgt_res.ed WHERE id IN (", paste(ids, collapse = ", "), ")"))
+ed <- DBI::dbGetQuery(con, paste("SELECT * FROM bgt_res.ed WHERE id IN (", paste(ids, collapse = ", "), ")"))
   
-pers <- DBI::dbGetQuery(con, "SELECT *
-FROM bgt_res.pers WHERE id IN (", paste(ids, collapse = ", "), ")"))
+pers <- DBI::dbGetQuery(con, paste("SELECT * FROM bgt_res.pers WHERE id IN (", paste(ids, collapse = ", "), ")"))
 
-skill <- DBI::dbGetQuery(con, "SELECT *
-FROM bgt_res.skill WHERE id IN (", paste(ids, collapse = ", "), ")"))
+skill <- DBI::dbGetQuery(con, paste("SELECT * FROM bgt_res.skill WHERE id IN (", paste(ids, collapse = ", "), ")"))
 
 DBI::dbDisconnect(con)
 
