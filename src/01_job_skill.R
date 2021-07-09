@@ -162,9 +162,9 @@ DBI::dbDisconnect(con)
 # soc <- soc %>% filter(onet %in% soc0) # over 17,000,000
 # soc1 <- soc %>% select(onet, onetname, sectorname, skill, skillcluster, skillclusterfamily) %>% unique() #over 108,000
 # soc1 <- soc1[is.na(onet)==F,]
+# write_rds(soc1, "./data/working/soc_skill_long.Rds")
 
-write_rds(soc1, "./data/working/soc_skill_long.Rds")
-
+soc1 <- read_rds("./data/working/soc_skill_long.Rds")
 soc2 <- soc1 %>% select(onet, skill) %>% unique() %>% group_by(onet) %>% mutate(number = sequence(n()))
 soc2$number <- paste0("skill.", soc2$number)
 soc2 <- spread(soc2, key = "number", value = "skill")
