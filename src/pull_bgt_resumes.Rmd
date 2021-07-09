@@ -7,11 +7,13 @@ output: html_document
 
 ```{r nation-pers, message=FALSE, warning=FALSE, include=FALSE}
 ## USE THIS SCRIPT FOR WHOLE PERS TABLE -------------------------------------------------------
-
 # load packages 
-for (pkg in c("tidyverse", "data.table", "stringr", "stringi", "mosaic", "dplyr", "readr","gt")) {
+for (pkg in c("tidyverse", "data.table", "stringr", "stringi", "dplyr", "readr")) {
   library(pkg, character.only = TRUE)
 }
+
+Sys.setenv(db_usr = "mes5bu")
+Sys.setenv(db_pwd = "mes5bu")
 
 get_db_conn <-
   function(db_name = "sdad",
@@ -32,9 +34,7 @@ get_db_conn <-
 con <- get_db_conn()
 
 
-pers <- DBI::dbGetQuery(con, "
-                        SELECT * FROM bgt_res.pers
-    "
+pers <- DBI::dbGetQuery(con, "SELECT * FROM bgt_job.main order by random()<=1000"
 )
 
 DBI::dbDisconnect(con)
