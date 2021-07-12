@@ -112,6 +112,37 @@ write_rds(socs, "./data/working/soc_skill.Rds")
 socs <- read_rds("./data/working/soc_skill.Rds")
 bls <- read_excel("./data/original/bls.xlsx")
 
+# creates basic soc to skill
 data <- left_join(socs, bls, by = c("soc" = "occ_code"))
 
+# soc to skill to bls but long, skills not in a vector
+data1 <- left_join(soc1, bls, by = c("soc" = "occ_code"))
+
+# soc to skill to bls to mos
+data1 <- data1 %>% select(soc, onet, socname, onetname, skill, tot_emp, emp_prse, h_mean, a_mean)
+data2 <- left_join(crosswalk, data1, by = c("O*NET-SOC Code" = "onet"))
+data2 <- unique(data2)
+
 write_rds(data, "./data/working/soc_skill_bls.Rds")
+write_rds(data1, "./data/working/soc_skill_bls_long.Rds")
+write_rds(data2, "./data/working/mos_skill_long.Rds")
+
+# MOS Skill Vector -------------------------------
+# mos1 <- data2 %>% select(`Army MOS Code`, skill) %>% unique() %>% group_by(`Army MOS Code`) %>% mutate(number = sequence(n()))
+# mos1$number <- paste0("skill.", mos1$number)
+# mos1 <- spread(mos1, key = "number", value = "skill")
+#
+# cols <- mos1 %>% ungroup() %>% select(starts_with("skill."))
+# cols <- names(cols)
+#
+# mos1$vector <- apply( mos1[ , cols ] , 1 , paste , collapse = "," )
+# mos1$vector <- gsub(",NA", "", mos1$vector)
+# mos1$vector <- strsplit(mos1$vector, ",")
+# mos1 <- mos1 %>% select(`Army MOS Code`, vector)
+#
+# data3 <- left_join(mos1, data2, by = c("Army MOS Code" = "Army MOS Code"))
+
+# write_rds(mos1, "./data/working/mos_skill_bls.Rds")
+
+
+
