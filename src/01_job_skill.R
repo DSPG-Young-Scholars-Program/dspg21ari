@@ -31,7 +31,7 @@ get_db_conn <-
 con <- get_db_conn()
 
 
-# job <- DBI::dbGetQuery(con, "SELECT id, jobdate, onet, onetname, sectorname FROM bgt_job.main WHERE jobdate >= '2019-01-01' AND jobdate < '2020-01-01'
+# job <- DBI::dbGetQuery(con, "SELECT id, jobdate, soc, socname, occfam, occfamname, onet, onetname, sectorname FROM bgt_job.main WHERE jobdate >= '2019-01-01' AND jobdate < '2020-01-01'
 #                        AND onet IN ('33-1021.00','33-1021.01','33-1021.02','33-2011.00','33-2011.01','33-2011.02','33-2021.00','33-2021.01',
 # '33-2021.02','33-3051.00','33-3051.01','33-3051.03','47-2221.00','47-4071.00','49-1011.00','49-9044.00','49-9095.00','53-1011.00','53-5021.00',
 # '53-5021.01','53-5021.02','53-5021.03','53-5031.00','11-9051.00','19-4093.00','29-2041.00','33-1011.00','33-1012.00','33-3012.00','33-3021.00',
@@ -71,7 +71,7 @@ DBI::dbDisconnect(con)
 # write_rds(skill, "./data/working/skills.Rds")
 
 job <- read_rds("./data/working/job.Rds")
-skill <- read_rds("./data/working/skill.Rds")
+skill <- read_rds("./data/working/skills.Rds")
 
 # Merge Jobs and Skills and Create Vectors ------------------
 
@@ -79,8 +79,13 @@ soc <- data.table(job, key="id")[
   data.table(skill, key="id"),
   allow.cartesian=TRUE]
 
+rm(job)
+rm(skill)
+
 soc <- soc %>% filter(onet %in% soc0) # over 17,476,416
-soc1 <- soc %>% select(onet, onetname, sectorname, skill, skillcluster, skillclusterfamily) %>% unique() # 115,508
+write_rds(soc, "./data/working/soc.Rds")
+
+soc1 <- soc %>% select(soc, socname, onet, onetname, sectorname, skill, skillcluster, skillclusterfamily) %>% unique() # 115,508
 soc1 <- soc1[is.na(onet)==F,]
 write_rds(soc1, "./data/working/soc_skill_long.Rds")
 
@@ -97,34 +102,16 @@ soc2$vector <- gsub(",NA", "", soc2$vector)
 soc2$vector <- strsplit(soc2$vector, ",")
 soc3 <- soc2 %>% select(onet, vector)
 
-soc4 <- soc1 %>% select(onet, onetname) %>% unique()
+soc4 <- soc1 %>% select(soc, socname, onet, onetname) %>% unique()
 socs <- left_join(soc4, soc3, by = c("onet"="onet"))
 write_rds(socs, "./data/working/soc_skill.Rds")
 
 
-# Failed Way --------------------
-# length(unique(skill$id))
-#
-# data <- skill %>% select(id, skill) %>% group_by(id) %>% mutate(number = sequence(n()))
-# data$number <- paste0("skill.", data$number)
-# data <- spread(data, key = "number", value = "skill")
-#
-# cols <- data %>% ungroup() %>% select(starts_with("skill."))
-# cols <- names(cols)
-# data$vector <- apply( data[ , cols ] , 1 , paste , collapse = "," )
-# data$vector <- gsub(",NA", "", data$vector)
-# data$vector <- strsplit(data$vector, ",")
-#
-# data <- data %>% select(id, vector)
-# rm(skill)
-# write_rds(data, "./data/working/unique_skill.rds")
 
-# data <- read_rds("./data/working/unique_skill.rds")
-#
-# soc <- left_join(job, data, by = c("id" = "id"))
-# soc1 <- soc %>% group_by(onet) %>% mutate(count = sequence(n())) %>% top_n(100)
-# soc1 %>% ggplot(aes(x=count)) + geom_histogram(bins = 100)
-# soc1$number <- paste0("vector.", soc1$count)
-#
-# data1 <- spread(soc1, key = "number", value = "vector")
+# BLS Matching --------------------
+socs <- read_rds("./data/working/soc_skill.Rds")
+bls <- read_excel("./data/original/bls.xlsx")
 
+data <- left_join(socs, bls, by = c("soc" = "occ_code"))
+
+write_rds(data, "./data/working/soc_skill_bls.Rds")
