@@ -21,12 +21,11 @@ soc_skills_top<-soc_skills[1:30000, ]
 skills_top<-as.data.table(table(soc_skills_top$skill))
 skills_top<-skills_top%>% arrange.(skills_top, desc(N))
 
-#recast data table to which skills correspond to which MOS
-
+#match by most common skills
+dt_skill_temp<-data.table(mos=mos_skills[1:11,1], skill=character())
 for (i in 1:nrow(mos_skills)){
   rank_skills<-unlist(mos_skills[i,2])
   a<-0
-  b<-0
   temp<-list()
   for(j in 1:nrow(skills_top)){
     for(k in 1:length(rank_skills)){
@@ -36,14 +35,17 @@ for (i in 1:nrow(mos_skills)){
       }
     }
   }
-  mos_skills[i, 3]<-list(temp)
+  dt_skill_temp[i, 2]<-list(temp)
 }
+setnames(dt_skill_temp, "mos.Army MOS Code", "Army MOS Code")
+mos_skills<-merge( mos_skills, dt_skill_temp,by="Army MOS Code")
+#mos_skills<-as.data.frame(mos_skills)
 write_rds(mos_skills, "./data/working/mos_soc.Rds")
 
 #quick personal sanity check
-check<-matrix(nrow=11, ncol=11)
-for(x in 1:11){
-  for(y in 1:11){
-    check[x, y]<-identical(mos_skills[x, 3], mos_skills[y, 3])
+sanity_check<-matrix(nrow=10, ncol=10)
+for(x in 1:10){
+  for(y in 1:10){
+    sanity_check[x, y]<-identical(mos_skills[x, 3], mos_skills[y, 3])
   }
 }
