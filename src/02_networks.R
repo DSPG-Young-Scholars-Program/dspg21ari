@@ -27,13 +27,15 @@ soc_mos <- soc_mos %>%
   mutate(e_total=sum(employ)) %>%
   group_by(target) %>%
   mutate(e_weight=sum(employ/e_total)) %>%
-  ungroup()
+  ungroup() %>%
+  mutate(e_freq = e_weight*freq)
 soc_mos <- soc_mos %>%
   mutate(s_total=sum(salary)) %>%
   group_by(target) %>%
   mutate(s_weight=sum(salary/s_total)) %>%
-  ungroup()
-write.csv(soc_mos, "./data/working/mos_soc_network.csv")
+  ungroup() %>%
+  mutate(s_freq = s_weight*freq)
+write.csv(soc_mos, "./data/working/mos_soc_network.csv", row.names = F)
 
 # MOS to Skill (Long)
 skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean)) %>% unique()
@@ -43,13 +45,15 @@ skill_mos <- skill_mos %>%
   mutate(e_total=sum(employ)) %>%
   group_by(target) %>%
   mutate(e_weight=sum(employ/e_total)) %>%
-  ungroup()
+  ungroup() %>%
+  mutate(e_freq = e_weight*freq)
 skill_mos <- skill_mos %>%
   mutate(s_total=sum(salary, na.omit = T)) %>%
   group_by(target) %>%
   mutate(s_weight=sum(salary/s_total)) %>%
-  ungroup()
-write.csv(skill_mos, "./data/working/mos_skill_network.csv")
+  ungroup() %>%
+  mutate(s_freq = s_weight*freq)
+write.csv(skill_mos, "./data/working/mos_skill_network.csv", row.names = F)
 
 # MOS to MOS (Adjacency Matrix)
 
