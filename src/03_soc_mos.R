@@ -8,6 +8,7 @@ library(readxl)
 ### 1: files
 mos_skills<-readRDS("data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("data/working/soc_skill_bls_long.Rds")%>% as.data.table()
+weighted_skill<-weighted_skill<-read_csv("data/working/mos_skill_network.csv") %>% as.data.table()
 soc<-readRDS("data/working/soc_skill_bls.Rds")
 
 #pull top 40 jobs by employment + annual median income - commmented
@@ -17,8 +18,14 @@ soc<-soc[order(-tot_emp, -a_median)]
 ### 2:
 #order soc skills by employment + median income - morgan removed selecting top 30,000 skills
 soc_skills<-soc_skills[order(-tot_emp, -a_median)]
-skills_top<-as.data.table(table(soc_skills$skill))
-skills_top<-skills_top%>% arrange(skills_top, desc(N))
+skills_top<-sort(table(soc_skills$skill), decreasing=TRUE)
+skills_top<-skills_top%>% sort(decreasing = TRUE) %>% as.data.table()
+
+#employment weights
+colnames(skills_top)<-c("target", "N")
+weighted_skill_weights<-weighted_skill %>% select("target", "e_weight") %>% distinct()
+skills_top<-left_join(skills_top, weighted_skill_weights)
+skills_top<-skills_top[order(-e_weight)] #weight by employment weights
 
 #match by most common skills
 dt_skill_temp<-data.table(mos=mos_skills[1:11,1], skill=character())
@@ -49,3 +56,11 @@ for(x in 1:10){
     sanity_check[x, y]<-identical(mos_skills[x, 3], mos_skills[y, 3])
   }
 }
+
+#thought: each mos has different employment estimates--weight individually? make separate tables?
+
+
+### 3: viz
+
+
+
