@@ -1,18 +1,23 @@
 library(tidyverse)
+library(readxl)
 library(igraph)
 library(ggraph)
+library(tidygraph)
 library(graphlayouts)
+library(visNetwork)
+library(networkD3)
 
-install.packages(c("igraph","graphlayouts","ggraph","ggplot2"))
 #
 # Network Visualizations -----------------------------
 #
 
-# http://mr.schochastics.net/netVizR.html - walkthrough on network visualizations
+# http://mr.schochastics.net/netVizR.html
+# https://kateto.net/network-visualization
+
+
 # Visualizations
 # MOS - Skill - Salary or Employment (size)
 # MOS - Onetname - Employment (size)
-# Onetname - Skill - Employment (size) - MOS (color)
 
 # Data Frames to Export + Use
 socs <- read_rds("./data/working/soc_skill_bls_long.Rds")
@@ -20,9 +25,9 @@ crosswalk <- read_excel("./data/original/crosswalk.xlsx")
 
 # MOS to SOC (Long)
 mos_skill_long <- left_join(crosswalk, socs, by = c("O*NET-SOC Code" = "onet"))
-soc_mos <- mos_skill_long %>% transmute(soure = `Army MOS Title`, target = socname, employ = tot_emp, salary = as.numeric(a_mean)) %>% unique()
+soc_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = socname, employ = tot_emp, salary = as.numeric(a_mean)) %>% unique()
 soc_mos <- na.omit(soc_mos)
-soc_mos <- soc_mos %>% group_by(target) %>% mutate(freq = n()) %>% ungroup()
+soc_mos <- soc_mos %>% group_by(target) %>% mutate(freq = n(), employ = mean(employ), salary = mean(salary)) %>% ungroup() %>% unique()
 soc_mos <- soc_mos %>%
   mutate(e_total=sum(employ)) %>%
   group_by(target) %>%
@@ -40,7 +45,7 @@ write.csv(soc_mos, "./data/working/mos_soc_network.csv", row.names = F)
 # MOS to Skill (Long)
 skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean)) %>% unique()
 skill_mos <- na.omit(skill_mos)
-skill_mos <- skill_mos %>% group_by(target) %>% mutate(freq = n()) %>% ungroup()
+skill_mos <- skill_mos %>% group_by(target) %>% mutate(freq = n(), employ = mean(employ), salary = mean(salary)) %>% ungroup() %>% unique()
 skill_mos <- skill_mos %>%
   mutate(e_total=sum(employ)) %>%
   group_by(target) %>%
@@ -55,5 +60,47 @@ skill_mos <- skill_mos %>%
   mutate(s_freq = s_weight*freq)
 write.csv(skill_mos, "./data/working/mos_skill_network.csv", row.names = F)
 
-# MOS to MOS (Adjacency Matrix)
+# Networks in R -----------------
+# https://www.jessesadler.com/post/network-analysis-with-r/
 
+# iGraph
+mos <- skill_mos %>%
+  distinct(source) %>%
+  rename(label = source)
+skills <- skill_mos %>%
+  distinct(target) %>%
+  rename(label = target)
+nodes <- full_join(mos, skills, by = "label")
+
+skill_network <- graph_from_data_frame(d = skill_mos, vertices = nodes, directed = TRUE)
+plot(skill_network, edge.arrow.size = 0.2)
+plot(skill_network, layout = layout_with_graphopt, edge.arrow.size = 0.2)
+
+# Tidygraph
+skill_tidy <- as_tbl_graph(skill_network)
+
+ggraph(skill_tidy, layout = "graphopt") +
+  geom_node_point() +
+  geom_edge_link(aes(width = e_freq), alpha = 0.8) +
+  scale_edge_width(range = c(0.2, 2)) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  labs(edge_width = "Employment\n Weighted\n Frequency") +
+  theme_graph()
+
+# VisNetwork
+nodes2 <- nodes %>% rename(id = label)
+edges2 <- skill_mos %>% transmute(from = source, to = target, weight = e_freq)
+
+visNetwork(nodes2, edges2)
+visIgraph(skill_network)
+visNetwork(nodes2, edges2) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visEdges(arrows = "middle")
+
+# D3
+nodesd3 <- as.data.frame(nodes2)
+edgesd3 <- as.data.frame(edges2)
+
+forceNetwork(Links = edgesd3, Nodes = nodesd3, Source = "from", Target = "to",
+             NodeID = "id", Group = "id", Value = "weight",
+             opacity = 1, fontSize = 16, zoom = TRUE)
