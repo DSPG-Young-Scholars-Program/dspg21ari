@@ -4,6 +4,7 @@ library(tidytable)
 library(maditr)
 library(tidyverse)
 library(readxl)
+library(ggplot2)
 
 ### 1: files
 mos_skills<-readRDS("data/working/mos_skill.Rds") %>% as.data.table()
@@ -60,7 +61,20 @@ for(x in 1:10){
 #thought: each mos has different employment estimates--weight individually? make separate tables?
 
 
-### 3: viz
+#weight skills within each mos then match
+mos<-unique(weighted_skill$source)
+mos_skill_weighted<-data.table(mos=mos, skills=character())
+mos_tab_list<-list()
+for(i in 1:length(mos)){
+  temp<-weighted_skill %>% filter(source==mos[i]) %>% select("source", "target", "employ", "salary", "freq", "e_total", "s_total")
+  #temp<-temp %>% group_by(target) %>% mutate(freq_mos=n()) %>% ungroup()
 
+  temp<-temp %>% mutate(mos_e_total=sum(employ))%>% mutate(mos_e_weight=employ/mos_e_total)
+  temp<-temp %>% mutate(mos_s_total=sum(salary))%>% mutate(mos_s_weight=salary/mos_s_total)
+  temp<-temp[order(-freq, -mos_e_weight)]
+  mos_skill_weighted[i, 2]<-list(temp$target)
 
-
+  assign(paste(mos[i], "skills", sep='-'), temp)
+  mos_tab_list[i]<-paste(mos[i], "skills", sep='-')
+}
+write_rds(mos_skill_weighted, "./data/working/mos_soc_weighted.Rds")
