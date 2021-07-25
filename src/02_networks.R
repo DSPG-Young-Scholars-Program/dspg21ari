@@ -60,6 +60,46 @@ skill_mos <- skill_mos %>%
   mutate(s_freq = s_weight*freq)
 write.csv(skill_mos, "./data/working/mos_skill_network.csv", row.names = F)
 
+# Reduce DF -------------------------
+soc_mos_r <- soc_mos %>%
+  arrange(desc(e_freq)) %>%
+  top_frac(.5, e_freq) # 46 jobs
+write.csv(soc_mos_r, "./data/working/soc_network_reduce.csv", row.names = F)
+
+skill_mos_r <- skill_mos %>%
+  arrange(desc(e_freq)) %>%
+  top_frac(.5, e_freq) # 52 skills
+write.csv(skill_mos_r, "./data/working/skill_network_reduce.csv", row.names = F)
+
+# Network DF - All Skills ---------------------------------------
+# Data Frames to Export + Use
+all_long <- read_rds("./data/working/all_soc_skill_bls_long.Rds")
+
+# MOS to all skill (Long)
+mos_skill_long <- left_join(crosswalk, all_long, by = c("O*NET-SOC Code" = "onet"))
+skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), issoftware, isspecialized, isbaseline) %>% unique()
+skill_mos <- na.omit(skill_mos)
+skill_mos <- skill_mos %>% group_by(target) %>% mutate(freq = n(), employ = mean(employ), salary = mean(salary)) %>% ungroup() %>% unique()
+skill_mos <- skill_mos %>%
+  mutate(e_total=sum(employ)) %>%
+  group_by(target) %>%
+  mutate(e_weight=sum(employ/e_total)) %>%
+  ungroup() %>%
+  mutate(e_freq = e_weight*freq)
+skill_mos <- skill_mos %>%
+  mutate(s_total=sum(salary, na.omit = T)) %>%
+  group_by(target) %>%
+  mutate(s_weight=sum(salary/s_total)) %>%
+  ungroup() %>%
+  mutate(s_freq = s_weight*freq)
+write.csv(skill_mos, "./data/working/all_mos_skill_network.csv", row.names = F)
+
+# Reduce DF -------------------------
+skill_mos_r <- skill_mos %>%
+  arrange(desc(e_freq)) %>%
+  top_frac(.1, e_freq) # 897 skills
+write.csv(skill_mos_r, "./data/working/all_skill_reduce.csv", row.names = F)
+
 # Networks in R -----------------
 # https://www.jessesadler.com/post/network-analysis-with-r/
 
