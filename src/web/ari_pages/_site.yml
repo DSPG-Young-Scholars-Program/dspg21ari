@@ -1,0 +1,20 @@
+name: "ari-website"
+navbar:
+  title: "Manpower Planning with Army Administrative Data"
+  left:
+    - text: "Overview"
+      href: index.html
+    - text: "Data"
+      href: data.html
+    - text: "Methods"
+      href: methods.html
+    - text: "Findings"
+      menu:
+        - text: "Skill Data Frames"
+          href: skill_data_frame.html
+        - text: "Baseline Skills"
+          href: baseline.html
+        - text: "All Skills"
+          href: all_skill.html
+        - text: "Industry Case Study"
+          href: industry.html
