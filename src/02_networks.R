@@ -77,7 +77,9 @@ all_long <- read_rds("./data/working/all_soc_skill_bls_long.Rds")
 
 # MOS to all skill (Long)
 mos_skill_long <- left_join(crosswalk, all_long, by = c("O*NET-SOC Code" = "onet"))
-skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), issoftware, isspecialized, isbaseline) %>% unique()
+mos_skill_long$skill_type <- ifelse(mos_skill_long$isbaseline == T, "Baseline",
+                                    ifelse(mos_skill_long$issoftware == T, "Software", "Specialized"))
+skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), skill_type) %>% unique()
 skill_mos <- na.omit(skill_mos)
 skill_mos <- skill_mos %>% group_by(target) %>% mutate(freq = n(), employ = mean(employ), salary = mean(salary)) %>% ungroup() %>% unique()
 skill_mos <- skill_mos %>%
