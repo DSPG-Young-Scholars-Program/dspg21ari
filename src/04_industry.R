@@ -73,11 +73,8 @@ colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a
 army_health <- read.csv("./data/working/army_health_skills.csv")
 non_army_health <- read.csv( "./data/working/non_army_health_skills.csv")
 
-length(unique(non_army_health$skill))
-length(unique(army_health$skill))
-
 # 7741 skills that intersect out of 11,958 possible = 64.73 percent coverage
-length(intersect(non_army_health$skill, army_health$skill))
+both_skills <- intersect(non_army_health$skill, army_health$skill)
 
 non_army_health$skill_type <- ifelse(non_army_health$isbaseline == T, "Baseline",
                                     ifelse(non_army_health$issoftware == T, "Software", "Specialized"))
@@ -107,15 +104,6 @@ army_health <- army_health %>%
 
 non_army_health$skill_type <- as.factor(non_army_health$skill_type)
 army_health$skill_type <- as.factor(army_health$skill_type)
-
-non_army_health %>%
-  group_by(skill_type) %>%
-  slice_max(e_freq, n = 10) %>%
-  ungroup() %>%
-  ggplot(aes(e_freq, fct_reorder(skill, e_freq), fill = skill_type)) +
-  geom_col(show.legend = FALSE) +
-  labs(x = "Frequency by Employment Estimates", y = NULL, title = "Non-Army SOC Skills Frequency") +
-  facet_wrap(~skill_type, ncol = 1, scales = "free")
 
 non_army_health %>%
   select(skill, skill_type, e_freq) %>%
@@ -150,3 +138,37 @@ army_health %>%
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 
+non_army_health %>%
+  select(skill, skill_type, e_freq) %>%
+  filter(skill %notin% both_skills) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Non-Army SOC Code Skills")
+
+army_health %>%
+  na.omit()%>%
+  select(skill, skill_type, e_freq) %>%
+  filter(skill %notin% both_skills) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
