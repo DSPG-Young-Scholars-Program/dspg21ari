@@ -11,8 +11,8 @@ navbar:
       href: methods.html
     - text: "Findings"
       menu:
-        - text: "Skill Data Frames"
-          href: skill_data_frame.html
+        - text: "Main Findings"
+          href: main.html
         - text: "Baseline Skills"
           href: baseline.html
         - text: "All Skills"
