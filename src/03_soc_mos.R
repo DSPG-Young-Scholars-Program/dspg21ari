@@ -5,16 +5,21 @@ library(maditr)
 library(tidyverse)
 library(readxl)
 library(ggplot2)
+library(stargazer)
 
 ### 1: files
 mos_skills<-readRDS("data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("data/working/soc_skill_bls_long.Rds")%>% as.data.table()
-weighted_skill<-weighted_skill<-read_csv("data/working/mos_skill_network.csv") %>% as.data.table()
-soc<-readRDS("data/working/soc_skill_bls.Rds")
+weighted_skill<-read_csv("data/working/mos_skill_network.csv") %>% as.data.table()
+#soc<-readRDS("data/working/soc_skill_bls.Rds")
+all_skills_mos<-readRDS("data/working/all_mos_skill_long.Rds") %>% as.data.table()
+all_skills_soc<-readRDS("data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
+all_skill_uq<-read_csv("data/working/all_skill_unique.csv")
 
 #pull top 40 jobs by employment + annual median income - commmented
 soc<-soc[order(-tot_emp, -a_median)]
 # soc_top_20<-soc[1:20, ]$onetname
+
 
 ### 2:
 #order soc skills by employment + median income - morgan removed selecting top 30,000 skills
@@ -78,3 +83,86 @@ for(i in 1:length(mos)){
   mos_tab_list[i]<-paste(mos[i], "skills", sep='-')
 }
 write_rds(mos_skill_weighted, "./data/working/mos_soc_weighted.Rds")
+
+
+### 3: all skills
+all_skills_mos_specialized<-all_skills_mos %>% filter.(isspecialized==TRUE)
+all_skills_mos_software<-all_skills_mos %>% filter.(issoftware==TRUE)
+baseline_skills<-skills_top %>% top_n.(12)
+
+#reshape(all_skills_mos, "Army MOS Title", "skill", direction="wide")
+
+
+
+
+
+
+
+
+### 4: EDA, viz
+
+# 3.1: soc_skills [sector frequency, skills, cross tabs?]
+sect_skills<-soc_skills %>% select(sectorname, skill)
+freq_skill<-table(sect_skills$skill) %>% as.data.table()
+freq_skill<-freq_skill[order(-N)] %>% top_n.(8)
+
+# frequency of sector, basic skills:
+ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity')
+
+#all mos skills
+freq_all_skill_mos<-table(all_skills_mos$skill) %>% as.data.table()
+freq_all_skill_mos<-freq_all_skill_mos[order(-N)]%>% top_n.(12)
+ggplot(freq_all_skill_mos, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity')
+
+#all soc code skills
+freq_all_skills_soc<-table(all_skills_soc$skill) %>% as.data.table()
+freq_all_skills_soc<-freq_all_skills_soc[order(-N)] %>% top_n.(12)
+
+ggplot(freq_all_skills_soc, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity')
+
+#bls/wage information
+all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
+all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
+all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
+
+ggplot(all_skills_wage, aes(tot_emp))+geom_histogram()
+ggplot(all_skills_wage, aes(a_mean))+geom_histogram()
+summary(all_skills_wage)
+
+ggplot(all_skills_wage, aes(tot_emp))+geom_boxplot()
+ggplot(all_skills_wage, aes(a_mean))+geom_boxplot()
+
+
+
+#colors
+colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
+
+weighted_skill %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq))) +
+  scale_fill_manual(values=colors[1:10]) +
+  geom_col(show.legend = FALSE) +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+
+# unique skills
+all_skill_uq %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
