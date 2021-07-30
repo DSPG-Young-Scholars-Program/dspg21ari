@@ -1,28 +1,131 @@
 ---
 title: "Industry Case Study"
-output: html_document
+output:
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+root.dir = rprojroot::find_rstudio_root_file()
+setwd(root.dir)
+library(tidyverse)
+library(data.table)
+library(readxl)
+
+`%notin%`= function(x,y) !(x %in% y)
+colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
+
+army_health <- read.csv("./data/working/army_health_skills.csv")
+non_army_health <- read.csv( "./data/working/non_army_health_skills.csv")
+
+# 7741 skills that intersect out of 11,958 possible = 64.73 percent coverage
+both_skills <- intersect(non_army_health$skill, army_health$skill)
+
+non_army_health$skill_type <- ifelse(non_army_health$isbaseline == T, "Baseline",
+                                    ifelse(non_army_health$issoftware == T, "Software", "Specialized"))
+
+army_health$skill_type <- ifelse(army_health$isbaseline == T, "Baseline",
+                                     ifelse(army_health$issoftware == T, "Software", "Specialized"))
+
+non_army_health <- non_army_health %>%
+  group_by(skill) %>%
+  mutate(freq = n()) %>%
+  ungroup() %>%
+  mutate(e_total=sum(tot_emp,na.rm = T)) %>%
+  group_by(skill) %>%
+  mutate(e_weight=sum(tot_emp/e_total,na.rm = T)) %>%
+  ungroup() %>%
+  mutate(e_freq = e_weight*freq)
+
+army_health <- army_health %>%
+  group_by(skill) %>%
+  mutate(freq = n()) %>%
+  ungroup() %>%
+  mutate(e_total=sum(tot_emp,na.rm = T)) %>%
+  group_by(skill) %>%
+  mutate(e_weight=sum(tot_emp/e_total,na.rm = T)) %>%
+  ungroup() %>%
+  mutate(e_freq = e_weight*freq)
+
 ```
 
-## R Markdown
+```{r non unique graphs, echo= F}
+non_army_health$skill_type <- as.factor(non_army_health$skill_type)
+army_health$skill_type <- as.factor(army_health$skill_type)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+fig1 <- non_army_health %>%
+  select(skill, skill_type, e_freq) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Non-Army SOC Code Skills")
+fig1
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+fig2 <- army_health %>%
+  na.omit()%>%
+  select(skill, skill_type, e_freq) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+fig2
 ```
 
-## Including Plots
+```{r unique graphs, echo= F}
+fig3 <- non_army_health %>%
+  select(skill, skill_type, e_freq) %>%
+  filter(skill %notin% both_skills) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Non-Army SOC Code Skills")
+fig3
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+fig4 <- army_health %>%
+  na.omit()%>%
+  select(skill, skill_type, e_freq) %>%
+  filter(skill %notin% both_skills) %>%
+  group_by(skill) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(skill_type) %>%
+  unique()%>%
+  slice_max(freq, n = 10) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(skill, freq), fill = skill_type)) +
+  scale_fill_manual(values=c(colors[1], colors[4], colors[9])) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~skill_type, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+fig4
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
