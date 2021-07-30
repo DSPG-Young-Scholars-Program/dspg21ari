@@ -18,7 +18,7 @@ library(networkD3)
 # Visualizations
 # MOS - Skill - Salary or Employment (size)
 # MOS - Onetname - Employment (size)
-
+setwd("/home/mes5bu/git/ari3")
 # Data Frames to Export + Use
 socs <- read_rds("./data/working/soc_skill_bls_long.Rds")
 crosswalk <- read_excel("./data/original/crosswalk.xlsx")
@@ -40,7 +40,6 @@ soc_mos <- soc_mos %>%
   mutate(s_weight=sum(salary/s_total)) %>%
   ungroup() %>%
   mutate(s_freq = s_weight*freq)
-write.csv(soc_mos, "./data/working/mos_soc_network.csv", row.names = F)
 
 # MOS to Skill (Long)
 skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean)) %>% unique()
@@ -58,9 +57,20 @@ skill_mos <- skill_mos %>%
   mutate(s_weight=sum(salary/s_total)) %>%
   ungroup() %>%
   mutate(s_freq = s_weight*freq)
-write.csv(skill_mos, "./data/working/mos_skill_network.csv", row.names = F)
 
 # Reduce DF -------------------------
+mos_unique <- soc_mos %>%
+  select(source, target) %>%
+  group_by(target) %>%
+  mutate(freq = n()) %>%
+  filter(freq < 10)
+
+skill_unique <- skill_mos %>%
+  select(source, target) %>%
+  group_by(target) %>%
+  mutate(freq = n()) %>%
+  filter(freq < 10)
+
 soc_mos_r <- soc_mos %>%
   arrange(desc(e_freq)) %>%
   top_frac(.5, e_freq) # 46 jobs
@@ -71,13 +81,26 @@ skill_mos_r <- skill_mos %>%
   top_frac(.5, e_freq) # 52 skills
 write.csv(skill_mos_r, "./data/working/skill_network_reduce.csv", row.names = F)
 
+soc_mos_unique <- soc_mos %>%
+  filter(target %in% mos_unique$target) %>%
+  arrange(desc(e_freq)) %>%
+  top_frac(.5, e_freq)
+write.csv(soc_mos_unique, "./data/working/soc_network_unique.csv", row.names = F)
+
+skill_mos_unique <- skill_mos %>%
+  filter(target %in% skill_unique$target) %>%
+  arrange(desc(e_freq))
+write.csv(skill_mos_unique, "./data/working/skill_network_unique.csv", row.names = F)
+
 # Network DF - All Skills ---------------------------------------
 # Data Frames to Export + Use
-all_long <- read_rds("./data/working/all_soc_skill_bls_long.Rds")
+all_long <- read_rds("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_soc_skill_bls_long.Rds")
 
 # MOS to all skill (Long)
 mos_skill_long <- left_join(crosswalk, all_long, by = c("O*NET-SOC Code" = "onet"))
-skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), issoftware, isspecialized, isbaseline) %>% unique()
+mos_skill_long$skill_type <- ifelse(mos_skill_long$isbaseline == T, "Baseline",
+                                    ifelse(mos_skill_long$issoftware == T, "Software", "Specialized"))
+skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), skill_type) %>% unique()
 skill_mos <- na.omit(skill_mos)
 skill_mos <- skill_mos %>% group_by(target) %>% mutate(freq = n(), employ = mean(employ), salary = mean(salary)) %>% ungroup() %>% unique()
 skill_mos <- skill_mos %>%
@@ -92,13 +115,25 @@ skill_mos <- skill_mos %>%
   mutate(s_weight=sum(salary/s_total)) %>%
   ungroup() %>%
   mutate(s_freq = s_weight*freq)
-write.csv(skill_mos, "./data/working/all_mos_skill_network.csv", row.names = F)
 
 # Reduce DF -------------------------
+skill_unique_all <- skill_mos %>%
+  select(source, target) %>%
+  group_by(target) %>%
+  mutate(freq = n()) %>%
+  filter(freq < 10)
+
 skill_mos_r <- skill_mos %>%
   arrange(desc(e_freq)) %>%
-  top_frac(.1, e_freq) # 897 skills
+  top_frac(.02, e_freq) # 897 skills
 write.csv(skill_mos_r, "./data/working/all_skill_reduce.csv", row.names = F)
+
+skill_mos_unique <- skill_mos %>%
+  filter(target %in% skill_unique_all$target) %>%
+  arrange(desc(e_freq)) %>%
+  top_frac(.05, e_freq) # 897 skills
+write.csv(skill_mos_unique, "./data/working/all_skill_unique.csv", row.names = F)
+
 
 # Networks in R -----------------
 # https://www.jessesadler.com/post/network-analysis-with-r/
