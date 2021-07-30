@@ -1,3 +1,7 @@
+### TO DO
+# -stacked barcharts (clean df for that)
+# -make df
+
 ### 0: packages
 library(data.table)
 library(tidytable)
@@ -19,7 +23,7 @@ skill_uq<-read_csv("data/working/skill_network_unique.csv") %>% as.data.table()
 all_skills_mos<-readRDS("data/working/all_mos_skill_long.Rds") %>% as.data.table()
 all_skills_soc<-readRDS("data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
 all_skill_uq<-read_csv("data/working/all_skill_unique.csv")
-all_skill<-read_csv("data/working/all_skill_reduce.csv")
+all_skill<-read_csv("data/working/all_skill_mos_network.csv")
 
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
 
@@ -100,44 +104,135 @@ ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fi
 
 ## 3.3: software + specialized skills frequency
 # specialized
-all_skills_mos_specialized<-all_skills_mos %>% filter.(isspecialized==TRUE)
-freq_specialized_skill<-table(all_skills_mos_specialized$skill) %>% as.data.table()
-freq_specialized_skill<-freq_specialized_skill[order(-N)] %>% top_n.(10)
+all_skills_mos_specialized<-all_skill %>% filter.(skill_type=="Specialized")
+freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% as.data.table()
+freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n.(10)
 
-ggplot(freq_specialized_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
+ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Specialized)")+
-  scale_x_discrete(labels = str_wrap(freq_specialized_skill$V1, width = 8))
+  scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
 
 # software
-all_skills_mos_software<-all_skills_mos %>% filter.(issoftware==TRUE)
-freq_software_skill<-table(all_skills_mos_software$skill) %>% as.data.table()
-freq_software_skill<-freq_software_skill[order(-N)] %>% top_n.(10)
 
-ggplot(freq_software_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
-  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Software)")+
-  scale_x_discrete(labels = str_wrap(freq_software_skill$V1, width = 8))
+all_skills_mos_software<-all_skill %>% filter.(skill_type=="Software")
+freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.data.table()
+freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n.(10)
+
+ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
+  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Softwawre)")+
+  scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
 
 ## 3.4: software, specialized skills by MOS
 
 #specialized/MOS
 all_skills_mos_specialized %>%
   na.omit()%>%
-  select(`Army MOS Title`, skill, e_freq) %>%
-  group_by(skill_type) %>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_2) %>%
+  group_by(target) %>%
   mutate(freq = sum(e_freq)) %>%
   ungroup() %>%
-  group_by(`Army MOS Title`) %>%
+  group_by(source) %>%
   unique()%>%
   slice_max(freq, n = 5) %>%
   ungroup() %>%
-  ggplot(aes(freq, fct_reorder(skill_type, freq), fill = `Army MOS Title`)) +
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
-  facet_wrap(~`Army MOS Title`, ncol = 1, scales = "free") +
+  facet_wrap(~source, ncol = 1, scales = "free") +
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 
+all_skills_mos_specialized %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_1) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+
+#software/mos
+all_skills_mos_software %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_1) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+
+all_skills_mos_software %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_2) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
 ## 3.4: stacked barchart?
 
 
 ## 3.5: unique skills
+all_skill_uq %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_2) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+
+all_skill_uq %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_1) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
