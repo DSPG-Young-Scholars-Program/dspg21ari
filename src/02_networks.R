@@ -115,6 +115,7 @@ skill_mos <- skill_mos %>%
   mutate(s_weight=sum(salary/s_total)) %>%
   ungroup() %>%
   mutate(s_freq = s_weight*freq)
+write.csv(skill_mos, "./data/working/all_skill_mos_network.csv", row.names = F)
 
 # Reduce DF -------------------------
 skill_unique_all <- skill_mos %>%
