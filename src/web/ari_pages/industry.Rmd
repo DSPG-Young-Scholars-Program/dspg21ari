@@ -4,11 +4,18 @@ output:
   html_document: default
 ---
 
+One of the ways we wanted to highlight strengths and weaknesses of skills gained in the Army is to highlight the similarities and differences of skills gained from the Army that are similar to non-Army Soc codes in the Healthcare industry. This industry was selected for its current importance and salience and possibilities for job growth. We performed two methods to show this. We showcase similar skills, skills available in both sets of SOC codes (those attached to MOS's and those not), across three types of skills: baseline, software, and specialized. In the second half of this case study we showcase only skills that are unique to the matched or unmatched SOC codes. These are also available across all three categories. We selected the top 10 skills by their employment-weighted frequencies. For each skill we calculated frequencies across jobs in a SOC code and then multiplied it by a weight for the fraction of employment that SOC code had. Therefore, we penalize skills that are low growth fields or are generally uncommon in a particular job.
+
+## Army and Non-Army SOC Skills
+
+Within the skills that are shared by matched an unmatched SOC codes there is frequenct crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for facebook, microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 root.dir = rprojroot::find_rstudio_root_file()
 setwd(root.dir)
+
 library(tidyverse)
 library(data.table)
 library(readxl)
@@ -50,7 +57,11 @@ army_health <- army_health %>%
 
 ```
 
-```{r non unique graphs, echo= F}
+## Similar Skills
+
+Within the skills that are shared by matched an unmatched SOC codes there is frequenct crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for facebook, microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
+
+```{r non unique graphs, echo=FALSE}
 non_army_health$skill_type <- as.factor(non_army_health$skill_type)
 army_health$skill_type <- as.factor(army_health$skill_type)
 
@@ -90,7 +101,11 @@ fig2 <- army_health %>%
 fig2
 ```
 
-```{r unique graphs, echo= F}
+## Unique Skills
+
+Within the skills that are different in matched an unmatched SOC codes there are large differences, but also small numbers of non-connected skills. This shows that most skills can be gained in the army that can translate into jobs in healthcare, even jobs that are different from Army jobs. Baseline skills are sparse and very small in their weighted importance. Software and Specialized skills are also small in their weighted importance, but there is a larger list of skills. For example, within Army SOC skills they learn more skills about tools as listed within specialized skills, but non-Army specialized skills contain more analysis or medicine-specific skills.
+
+```{r unique graphs, echo= FALSE}
 fig3 <- non_army_health %>%
   select(skill, skill_type, e_freq) %>%
   filter(skill %notin% both_skills) %>%

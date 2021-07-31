@@ -4,7 +4,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+root.dir = rprojroot::find_rstudio_root_file()
 
 library(data.table)
 library(tidytable)
@@ -14,9 +17,15 @@ library(readxl)
 library(ggplot2)
 library(stargazer)
 
-mos_skills<-readRDS("~/git/dspg21ari/data/working/mos_skill.Rds") %>% as.data.table()
-soc_skills<-readRDS("~/git/dspg21ari/data/working/soc_skill_bls_long.Rds")%>% as.data.table()
-skill_uq<-read_csv("~/git/dspg21ari/data/working/skill_network_unique.csv") %>% as.data.table()
+mos_skills<-readRDS("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/mos_skill.Rds") %>% as.data.table()
+soc_skills<-readRDS("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/soc_skill_bls_long.Rds")%>% as.data.table()
+skill_uq<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/skill_network_unique.csv") %>% as.data.table()
+all_skills_mos<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_mos_network.csv") %>% as.data.table()
+all_skills_soc<-readRDS("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
+all_skill_uq<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_unique.csv")
+all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
+all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
+all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
 
 #generate tables used for the rest of the document
 skills_top<-sort(table(soc_skills$skill), decreasing=TRUE)
@@ -30,21 +39,19 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 
 ```
 
-## R Markdown
-
-# Summary Statistics
-```{Summary Statistics, echo=FALSE}
+### Summary Statistics
+```{r Summary Statistics, echo=FALSE}
 baseline_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 baseline_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 baseline_skills_wage[,3]<-sapply(baseline_skills_wage[,3], as.numeric)
-stargazer(baseline_skills_wage, summary = TRUE)
+stargazer(baseline_skills_wage, summary = TRUE, header = F, type = "html")
 
 ```
 
-# stacked bar chart (TBD)
+###  stacked bar chart (TBD)
 
-# Baseline Skill Frequency
-```{Baseline Skill Frequency, echo=FALSE}
+###  Baseline Skill Frequency
+```{r Baseline Skill Frequency, echo=FALSE}
 freq_skill<-table(soc_skills$skill) %>% as.data.table()
 freq_skill<-freq_skill[order(-N)] %>% top_n.(8)
 ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
@@ -52,7 +59,7 @@ ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=c
   scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))
 ```
 
-# Unique Skills (Baseline, Part 1)
+## Unique Skills (Baseline, Part 1)
 Unique: skills that do not occur in all 11 MOS
 
 Most commonly observed: knowledge of languages (Turkish, Urdu, Greek, Thai)
@@ -76,8 +83,8 @@ skill_uq %>%
        title = "Unique Baseline Skill Frequency (Part 1)")
 ```
 
-# Part 2
-```{Part 2, echo=FALSE}
+###  Part 2
+```{r Part 2, echo=FALSE}
 skill_uq %>%
   na.omit()%>%
   select(target, source, e_freq) %>%

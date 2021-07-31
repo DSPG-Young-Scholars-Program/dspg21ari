@@ -318,24 +318,13 @@ $(document).ready(function () {
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<div id="current-methods" class="section level3">
+<h3>Current Methods</h3>
+<p>Our current project methods are basic data merging methods. We connected O*NET's crosswalk with Burning Glass data to create skill vectors for each civillian occupation and Army occupation. We then connected this data via SOC codes to BLS data which provided us average estimates of employment and salary for each SOC code, skill, and Army Occupation. This produced a dataframe of skills acquried by veterans which can be used for their resumes in their transition to civillian life. One of the big problems with transitions is the <a href="https://blogs.va.gov/VAntage/6603/why-can%E2%80%99t-veterans-get-jobs/">culture differences</a> between military members and civillians. Our hope is that this data frame of skills will help guide veterans in tailoring their resumes with skills understandable by civillian employers who may not be able to translate Army occupations into skills related to their fields.</p>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="methods_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="future-methods" class="section level3">
+<h3>Future Methods</h3>
+<p>In the future, we would like to expand our work to focus on more complicated methods of analysis. We spent the first half of the summer investigating methods for understanding Manpower Planning within the Army. Our hope is that in the future we can focus on simulation and optimization to measure how Armed Services Vocational Aptitude Battery (ASVAB) scores can translate into placement within the Army and therefore which skills a military member would acquire and then translate into probabilities of employment and salary ranges. Specifically, we could see how scores right below or right above a cut-off for a job would translate into future outcomes for a member of the Army. This regression discontinuity design is common within statistics and economics to measure how small differences can amount to large future gains in employment and monetary gain.</p>
 </div>
 
 

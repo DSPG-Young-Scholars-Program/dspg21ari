@@ -3,26 +3,14 @@ title: "Data"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+### O*NET
 
-## R Markdown
+[O*NET](https://www.onetonline.org/) produced a [crosswalk](https://www.onetcenter.org/crosswalks.html) of Army Jobs and Standard Occupation Classification (SOC) Codes. This crosswalk was produced to connect the 10 largest Army jobs, commonly refered to as military occupational specialties (MOS), to civilian skills. This was a way of understanding which civillian occupations prepared individuals to best perform in these 10 Army jobs. This is apart of larger works on veteran transitions from the military to civillian life.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### Burning Glass
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+[Burning Glass](https://www.burning-glass.com/) data is proprietary data which provided us with skills that are listed on job advertisements. For each SOC code there are types of skills required for jobs and therefore when attaching these skills to SOC codes that similar to Army jobs we're able to create a vector of skills gained within the Army that they could use for their resumes.
 
-```{r cars}
-summary(cars)
-```
+### Bureau of Labor Statistics
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+[Bureau of Labor Statistics (BLS)](https://www.bls.gov/) provides estimates of employment and annual salaries for SOC codes. We used this data and matched SOC codes with their employment and salary estimates. This data was also used to weight which skills and SOC codes were more important to Army Officers than others. Skills used in fields that employ more people and have higher salaries are better for Army Officers to focus on when transitioning to civillian occupations.

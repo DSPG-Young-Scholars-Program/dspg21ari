@@ -4,7 +4,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+root.dir = rprojroot::find_rstudio_root_file()
 
 library(data.table)
 library(tidytable)
@@ -14,9 +17,9 @@ library(readxl)
 library(ggplot2)
 library(stargazer)
 
-all_skills_mos<-readRDS("~/git/dspg21ari/data/working/all_mos_skill_long.Rds") %>% as.data.table()
-all_skills_soc<-readRDS("~/git/dspg21ari/data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
-all_skill_uq<-read_csv("~/git/dspg21ari/data/working/all_skill_unique.csv")
+all_skills_mos<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_mos_network.csv") %>% as.data.table()
+all_skills_soc<-readRDS("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
+all_skill_uq<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_unique.csv")
 
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
 
@@ -26,46 +29,46 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 ```
 
 
-# Summary Statistics
-```{All Skills Employment Statistics, echo=FALSE}
+###  Summary Statistics
+```{r All Skills Employment Statistics, echo=FALSE}
 all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
-stargazer(all_skills_wage, summary = TRUE)
+stargazer(all_skills_wage, summary = TRUE, header = F, type = "html")
 ```
 
-# All Skills Frequency
-```{All Skills Frequency, echo=FALSE}
+###  All Skills Frequency
+```{r All Skills Frequency, echo=FALSE}
 freq_all_skill<-table(all_skills_mos$skill) %>% as.data.table()
-freq_all_skill<-freq_all_skill[order(-N)] %>% top_n.(10)
+freq_all_skill<-freq_all_skill[order(-N)] %>% top_n(10)
 ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (All) Frequency")+
   scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))
 ```
 
-# Specialized Skill Frequency
-```{Specialized Skill Frequency, echo=FALSE}
-all_skills_mos_specialized<-all_skill %>% filter.(skill_type=="Specialized")
+###  Specialized Skill Frequency
+```{r Specialized Skill Frequency, echo=FALSE}
+all_skills_mos_specialized<-all_skills_mos %>% filter.(skill_type == "Specialized")
 freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% as.data.table()
-freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n.(10)
+freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n(10)
 
 ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Specialized)")+
   scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
 ```
 
-# Software Skill Frequency
-```{Specialized Skill Frequency, echo=FALSE}
-all_skills_mos_software<-all_skill %>% filter.(skill_type=="Software")
+###  Software Skill Frequency
+```{r Specialized Skill Frequency 2, echo=FALSE}
+all_skills_mos_software <- all_skills_mos %>% filter.(skill_type=="Software")
 freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.data.table()
-freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n.(10)
+freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10)
 
 ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Softwawre)")+
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
 ```
 
-# Specialized Skill/MOS (1)
+###  Specialized Skill/MOS (1)
 ```{r, echo=FALSE}
 all_skills_mos_specialized %>%
   na.omit()%>%
@@ -86,7 +89,7 @@ all_skills_mos_specialized %>%
        title = "Army SOC Code Skills")
 ```
 
-# Specialized Skill/MOS (2)
+###  Specialized Skill/MOS (2)
 ```{r, echo=FALSE}
 all_skills_mos_specialized %>%
   na.omit()%>%
@@ -108,7 +111,7 @@ all_skills_mos_specialized %>%
 
 ```
 
-#Software Skills/MOS (1)
+###  Software Skills/MOS (1)
 ```{r, echo=FALSE}
 all_skills_mos_software %>%
   na.omit()%>%
@@ -129,7 +132,7 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-#Software Skills/MOS (2)
+###  Software Skills/MOS (2)
 somehow all of these software plots are exactly the same
 ```{r, echo=FALSE}
 all_skills_mos_software %>%
@@ -151,7 +154,7 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-# Unique Skills (1)
+###  Unique Skills (1)
 ```{r, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
@@ -172,7 +175,7 @@ all_skill_uq %>%
        title = "Army SOC Code Skills")
 ```
 
-#Unique Skills (2)
+### Unique Skills (2)
 ```{r, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
