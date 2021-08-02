@@ -1,6 +1,8 @@
 ---
 title: "Overview"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
 ---
 
-
+We study the connection of Army jobs and skills acquired through civillian jobs to create a unique vector of skills associated with the Army. Veterans are often crowded out in job searches because they don’t know what skills they have acquired in their tenure. We utilize a unique O*NET crosswalk that connects Army Military Occupation Specialty (MOS) codes with Standard Occupation Classification (SOC) codes to data from a propretary dataset. This proprietary dataset gives us skills required for jobs through job advertisements. This research provides an overview of skills acquired in the Army which can provide information to Army Veterans on the jobs they may be best suited for and the skills they can place on their resumes.

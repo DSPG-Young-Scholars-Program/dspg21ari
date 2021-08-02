@@ -1,6 +1,8 @@
 ---
 title: "Baseline Skills"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -44,8 +46,9 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 baseline_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 baseline_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 baseline_skills_wage[,3]<-sapply(baseline_skills_wage[,3], as.numeric)
-stargazer(baseline_skills_wage, summary = TRUE, header = F, type = "html")
-
+```
+```{r stargaxer, results="asis"}
+stargazer(baseline_skills_wage, summary = TRUE, header = F, type='html')
 ```
 
 ###  stacked bar chart (TBD)

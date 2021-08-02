@@ -1,6 +1,8 @@
 ---
-title: "Skill Data Frames"
-output: html_document
+title: "Main Findings"
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 ```{r setup, include=FALSE}

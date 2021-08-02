@@ -1,6 +1,8 @@
 ---
 title: "All Skills"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 ```{r setup, include=FALSE}
@@ -34,7 +36,10 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
-stargazer(all_skills_wage, summary = TRUE, header = F, type = "html")
+```
+
+```{r stargaxer, results="asis"}
+stargazer(all_skills_wage, summary = TRUE, header = F, type='html')
 ```
 
 ###  All Skills Frequency

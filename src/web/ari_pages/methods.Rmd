@@ -1,6 +1,8 @@
 ---
 title: "Methods"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 ### Current Methods

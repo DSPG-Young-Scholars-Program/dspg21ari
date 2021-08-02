@@ -1,7 +1,8 @@
 ---
 title: "Industry Case Study"
-output:
-  html_document: default
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 One of the ways we wanted to highlight strengths and weaknesses of skills gained in the Army is to highlight the similarities and differences of skills gained from the Army that are similar to non-Army Soc codes in the Healthcare industry. This industry was selected for its current importance and salience and possibilities for job growth. We performed two methods to show this. We showcase similar skills, skills available in both sets of SOC codes (those attached to MOS's and those not), across three types of skills: baseline, software, and specialized. In the second half of this case study we showcase only skills that are unique to the matched or unmatched SOC codes. These are also available across all three categories. We selected the top 10 skills by their employment-weighted frequencies. For each skill we calculated frequencies across jobs in a SOC code and then multiplied it by a weight for the fraction of employment that SOC code had. Therefore, we penalize skills that are low growth fields or are generally uncommon in a particular job.
