@@ -46,7 +46,18 @@ ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=c
   scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))
 
 ## 2.3: stacked bar chart (each bar is an MOS, each section is frequency of a top 10 skill)
+all_skills_baseline<-all_skills_mos_specialized<-all_skills_mos %>% filter.(isbaseline==TRUE)
+all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS Title`]
 
+all_skills_baseline_top<-all_skills_baseline_top %>%
+  mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
+ggplot(all_skills_baseline_top, aes(fill=skill, y=freq, x=`Army MOS Title`))+
+  geom_bar(position='fill', stat='identity')+
+  labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS")+
+  scale_x_discrete(labels=str_wrap(unique(all_skills_baseline_top$`Army MOS Title`), width=10))+
+  theme(text=element_text(size=9))
 
 ## 2.4: unique baseline skills + frequency/MOS (maybe top 3 per MOS?)
 skill_uq %>%
@@ -198,7 +209,32 @@ all_skills_mos_software %>%
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 ## 3.4: stacked barchart?
+# Specialized
+all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
 
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
+  mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
+ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
+  geom_bar(position='fill', stat='identity')+
+  labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
+  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$`Army MOS Title`), width=10))+
+  theme(text=element_text(size=9), legend.text=element_text(size=7))
+
+
+# Software
+all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
+
+all_skills_mos_software_top<-all_skills_mos_software_top %>%
+  mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
+ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
+  geom_bar(position='fill', stat='identity')+
+  labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
+  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_software_top$`Army MOS Title`), width=10))+
+  theme(text=element_text(size=9), legend.text=element_text(size=7))
 
 ## 3.5: unique skills
 all_skill_uq %>%
@@ -236,3 +272,46 @@ all_skill_uq %>%
   facet_wrap(~source, ncol = 1, scales = "free") +
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
+
+## 3.6: salary/employment by MOS
+
+# employment, group 1
+all_skill %>%
+  na.omit()%>%
+  select(target, source, employ) %>%
+  filter(source %in% mos_1) %>%
+  ggplot(aes(source, employ)) +
+  stat_summary(fun=mean, geom="bar", fill=colors[1])+
+  labs(x = "MOS", y = NULL,
+       title = "Average Employment per MOS (1)")
+
+# employment, group 2
+all_skill %>%
+  na.omit()%>%
+  select(target, source, employ) %>%
+  filter(source %in% mos_2) %>%
+  ggplot(aes(source, employ)) +
+  stat_summary(fun=mean, geom="bar", fill=colors[1])+
+  labs(x = "MOS", y = NULL,
+       title = "Average Employment per MOS (2)")
+
+# salary, group 1
+all_skill %>%
+  na.omit()%>%
+  select(target, source, salary) %>%
+  filter(source %in% mos_1) %>%
+  ggplot(aes(source, salary)) +
+  stat_summary(fun=mean, geom="bar", fill=colors[1])+
+  labs(x = "MOS", y = NULL,
+       title = "Average Income per MOS (1)")
+
+
+# salary, group 2
+all_skill %>%
+  na.omit()%>%
+  select(target, source, salary) %>%
+  filter(source %in% mos_2) %>%
+  ggplot(aes(source, salary)) +
+  stat_summary(fun=mean, geom="bar", fill=colors[1])+
+  labs(x = "MOS", y = NULL,
+       title = "Average Income per MOS (2)")

@@ -7,7 +7,7 @@ output:
 
 ### O*NET
 
-[O*NET](https://www.onetonline.org/) produced a [crosswalk](https://www.onetcenter.org/crosswalks.html) of Army Jobs and Standard Occupation Classification (SOC) Codes. This crosswalk was produced to connect the 10 largest Army jobs, commonly refered to as military occupational specialties (MOS), to civilian skills. This was a way of understanding which civillian occupations prepared individuals to best perform in these 10 Army jobs. This is apart of larger works on veteran transitions from the military to civillian life.
+[O*NET](https://www.onetonline.org/) is an online database that provides information on occupations and is a resource to job seekers and vetrans who are looking for work. O*NET produced a [crosswalk](https://www.onetcenter.org/crosswalks.html) of Army Jobs and Standard Occupation Classification (SOC) Codes. SOC codes are a federal standardization of jobs that helps classify occupational data. [This crosswalk was produced to connect the 10 largest Army jobs, commonly referred to as military occupational specialties (MOS), to civilian skills](https://www.rand.org/pubs/research_reports/RR1719.html). This was a way of understanding which civilian occupations prepared individuals to best perform in these 10 Army jobs. This is a part of larger works on veteran transitions from the military to civilian life.
 
 ### Burning Glass
 
@@ -15,4 +15,4 @@ output:
 
 ### Bureau of Labor Statistics
 
-[Bureau of Labor Statistics (BLS)](https://www.bls.gov/) provides estimates of employment and annual salaries for SOC codes. We used this data and matched SOC codes with their employment and salary estimates. This data was also used to weight which skills and SOC codes were more important to Army Officers than others. Skills used in fields that employ more people and have higher salaries are better for Army Officers to focus on when transitioning to civillian occupations.
+[Bureau of Labor Statistics (BLS)](https://www.bls.gov/) provides estimates of employment and annual salaries for SOC codes. We used this data and matched SOC codes with their employment and salary estimates. This data was also used to weight which skills and SOC codes were more important to Army Officers than others. Skills used in fields that employ more people and have higher salaries are better for Army Officers to focus on when transitioning to civilian occupations.
