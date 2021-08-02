@@ -31,7 +31,7 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 ```
 
 
-###  Summary Statistics
+###  Exploratory Data Analysis
 ```{r All Skills Employment Statistics, echo=FALSE}
 all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
@@ -42,7 +42,7 @@ all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
 stargazer(all_skills_wage, summary = TRUE, header = F, type='html')
 ```
 
-###  All Skills Frequency
+#### All Skills
 ```{r All Skills Frequency, echo=FALSE}
 freq_all_skill<-table(all_skills_mos$skill) %>% as.data.table()
 freq_all_skill<-freq_all_skill[order(-N)] %>% top_n(10)
@@ -51,7 +51,7 @@ ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fi
   scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))
 ```
 
-###  Specialized Skill Frequency
+#### Specialized Skills
 ```{r Specialized Skill Frequency, echo=FALSE}
 all_skills_mos_specialized<-all_skills_mos %>% filter.(skill_type == "Specialized")
 freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% as.data.table()
@@ -62,7 +62,48 @@ ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(s
   scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
 ```
 
-###  Software Skill Frequency
+```{r, echo=FALSE}
+all_skills_mos_specialized %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_2) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+
+```
+
+```{r, echo=FALSE}
+all_skills_mos_specialized %>%
+  na.omit()%>%
+  select(target, source, e_freq) %>%
+  filter(source %in% mos_1) %>%
+  group_by(target) %>%
+  mutate(freq = sum(e_freq)) %>%
+  ungroup() %>%
+  group_by(source) %>%
+  unique()%>%
+  slice_max(freq, n = 5) %>%
+  ungroup() %>%
+  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
+  scale_fill_manual(values=colors) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, ncol = 1, scales = "free") +
+  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+       title = "Army SOC Code Skills")
+```
+
+####  Software Skills
 ```{r Specialized Skill Frequency 2, echo=FALSE}
 all_skills_mos_software <- all_skills_mos %>% filter.(skill_type=="Software")
 freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.data.table()
@@ -73,50 +114,6 @@ ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
 ```
 
-###  Specialized Skill/MOS (1)
-```{r, echo=FALSE}
-all_skills_mos_specialized %>%
-  na.omit()%>%
-  select(target, source, e_freq) %>%
-  filter(source %in% mos_1) %>%
-  group_by(target) %>%
-  mutate(freq = sum(e_freq)) %>%
-  ungroup() %>%
-  group_by(source) %>%
-  unique()%>%
-  slice_max(freq, n = 5) %>%
-  ungroup() %>%
-  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
-  scale_fill_manual(values=colors) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
-       title = "Army SOC Code Skills")
-```
-
-###  Specialized Skill/MOS (2)
-```{r, echo=FALSE}
-all_skills_mos_specialized %>%
-  na.omit()%>%
-  select(target, source, e_freq) %>%
-  filter(source %in% mos_2) %>%
-  group_by(target) %>%
-  mutate(freq = sum(e_freq)) %>%
-  ungroup() %>%
-  group_by(source) %>%
-  unique()%>%
-  slice_max(freq, n = 5) %>%
-  ungroup() %>%
-  ggplot(aes(freq, fct_reorder(target, freq), fill = source)) +
-  scale_fill_manual(values=colors) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
-       title = "Army SOC Code Skills")
-
-```
-
-###  Software Skills/MOS (1)
 ```{r, echo=FALSE}
 all_skills_mos_software %>%
   na.omit()%>%
@@ -137,8 +134,6 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-###  Software Skills/MOS (2)
-somehow all of these software plots are exactly the same
 ```{r, echo=FALSE}
 all_skills_mos_software %>%
   na.omit()%>%
@@ -159,7 +154,8 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-###  Unique Skills (1)
+
+####  Unique Skills
 ```{r, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
@@ -180,7 +176,6 @@ all_skill_uq %>%
        title = "Army SOC Code Skills")
 ```
 
-### Unique Skills (2)
 ```{r, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
@@ -201,4 +196,4 @@ all_skill_uq %>%
        title = "Army SOC Code Skills")
 ```
 
-
+### Networks
