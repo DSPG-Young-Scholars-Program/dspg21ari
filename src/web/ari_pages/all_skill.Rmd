@@ -19,10 +19,10 @@ library(readxl)
 library(ggplot2)
 library(stargazer)
 
-all_skills_mos<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_mos_network.csv") %>% as.data.table()
-all_skills_soc<-readRDS("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
-all_skill_uq<-read_csv("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_skill_unique.csv")
-all_skill<-read_csv("~/git/dspg21ari/data/working/all_skill_mos_network.csv")
+all_skills_mos<-read_csv("./data/working/all_skill_mos_network.csv") %>% as.data.table()
+all_skills_soc<-readRDS("./data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
+all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
+all_skill<-read_csv("./data/working/all_skill_mos_network.csv")
 
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
 
