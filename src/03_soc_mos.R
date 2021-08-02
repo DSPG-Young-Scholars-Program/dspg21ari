@@ -8,18 +8,18 @@ library(ggplot2)
 library(stargazer)
 
 ### 1: files
+# baseline
 mos_skills<-readRDS("data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("data/working/soc_skill_bls_long.Rds")%>% as.data.table()
-<<<<<<< HEAD
-weighted_skill<-read_csv("data/working/mos_skill_network.csv") %>% as.data.table()
+skill_uq<-read_csv("data/working/skill_network_unique.csv") %>% as.data.table()
 #soc<-readRDS("data/working/soc_skill_bls.Rds")
+
+#all skills df
 all_skills_mos<-readRDS("data/working/all_mos_skill_long.Rds") %>% as.data.table()
 all_skills_soc<-readRDS("data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
 all_skill_uq<-read_csv("data/working/all_skill_unique.csv")
-=======
-weighted_skill<-weighted_skill<-read_csv("data/working/mos_skill_network.csv") %>% as.data.table()
-#soc<-readRDS("data/working/soc_skill_bls.Rds")
->>>>>>> 277cb8bfbfcb512b3e653da1abc06902fc70620c
+all_skill<-read_csv("data/working/all_skill_mos_network.csv")
+
 
 #pull top 40 jobs by employment + annual median income - commmented
 #soc<-soc[order(-tot_emp, -a_median)]
@@ -109,23 +109,22 @@ mos_tab_list<-unlist(mos_tab_list)
 
 write_rds(mos_skill_weighted, "./data/working/mos_soc_weighted.Rds")
 
-<<<<<<< HEAD
-
 ### 3: all skills
 all_skills_mos_specialized<-all_skills_mos %>% filter.(isspecialized==TRUE)
 all_skills_mos_software<-all_skills_mos %>% filter.(issoftware==TRUE)
-baseline_skills<-skills_top %>% top_n.(12)
+baseline_skills<-skills_top
 
 #reshape(all_skills_mos, "Army MOS Title", "skill", direction="wide")
 
+all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
 
 
-
-
-
-
-
-### 4: EDA, viz
+all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
+### 4: EDA, viz(updated: 05_eda_viz)
 
 # 3.1: soc_skills [sector frequency, skills, cross tabs?]
 sect_skills<-soc_skills %>% select(sectorname, skill)
