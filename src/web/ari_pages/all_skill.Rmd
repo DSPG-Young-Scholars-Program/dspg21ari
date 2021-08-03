@@ -44,7 +44,7 @@ all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
 ```
 
 ```{r stargaxer, results="asis"}
-stargazer(all_skills_wage, summary = TRUE, header = F, type='html')
+stargazer(all_skills_wage, summary = TRUE, header = F, type='html', covariate.labels = c("Employment", "Salary"))
 ```
 
 #### All Skills
