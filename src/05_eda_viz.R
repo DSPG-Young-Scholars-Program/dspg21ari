@@ -210,8 +210,10 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ## 3.4: stacked barchart?
 # Specialized
-all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
-  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_specialized_mos<-all_skills_mos %>% filter(isspecialized==TRUE)
+all_skills_mos_specialized_top<-all_skills_specialized_mos %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top%>% as.data.table() %>% setkey(freq)
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
 
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
@@ -224,7 +226,8 @@ ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`
 
 
 # Software
-all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+all_skills_software_mos<-all_skills_mos %>% filter(issoftware==TRUE)
+all_skills_mos_software_top<-all_skills_software_mos %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
 
