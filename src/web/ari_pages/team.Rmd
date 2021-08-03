@@ -1,0 +1,94 @@
+---
+title: 
+output: 
+  html_document:
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{css, echo = FALSE}
+{
+  box-sizing: border-box;
+}
+.column {
+  float: left;
+  width: 25%;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.justify {
+  text-align: justify
+}
+```
+
+### DSPG Team Members {style=text-align:center}
+
+<div class="row">
+<div class="column">
+![](images/ms_headshot.png){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+
+[Morgan Stockham](https://github.com/morganstockham), Fellow  
+
+Claremont Graduate University
+
+Applied Microeconomics
+</div>
+
+<div class="column">
+![](images/ap_headshot.jpg){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+[Asia Porter](https://github.com/asiaporter), Intern  
+
+Washington University in St. Louis  
+
+Sociology, Legal Studies
+</div>
+
+<div class="column">
+![](images/sz_headshot.jpg){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+
+[Stephanie Zhang](https://github.com/stephzhang19), Intern  
+
+University of Virginia
+
+Sociology, Mathematics
+</div>
+
+
+### UVA SDAD Team Members {style=text-align:center}
+
+<div class="row">
+<div class="column">
+![](images/jg_headshot.png){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+
+[Joshua Goldstein](https://biocomplexity.virginia.edu/person/joshua-goldstein) 
+
+Research Assistant Professor
+
+</div>
+
+<div class="column">
+![](images/ah_headshot.png){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+
+[Aritra Halder](https://biocomplexity.virginia.edu/person/aritra-halder) 
+
+Research Associate Professor
+
+</div>
+
+<div class="column">
+![](images/js_headshot.png){style="width:60%; display: block; margin-left: auto; margin-right: auto;"} 
+
+[Joanna Schroeder](https://biocomplexity.virginia.edu/person/joanna-schroeder)
+
+Research Specialist  
+
+</div>
+### Project Sponsors/Stakeholders {style=text-align:center}
+
+Andy Slaughter, Senior Research Psychologist, Army Research Institute

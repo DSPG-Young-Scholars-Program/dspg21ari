@@ -21,3 +21,7 @@ navbar:
           href: all_skill.html
         - text: "Industry Case Study"
           href: industry.html
+    - text: "Limitations and Implications"
+      href: limit.html
+    - text: "Team"
+      href: team.html
