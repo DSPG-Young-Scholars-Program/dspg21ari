@@ -4,12 +4,14 @@ output:
   html_document:
     theme: cerulean
 ---
-
-```{r setup, include=FALSE}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 root.dir = rprojroot::find_rstudio_root_file()
+```
+
+```{r setup, include=FALSE}
 
 library(data.table)
 library(tidytable)
@@ -19,7 +21,11 @@ library(readxl)
 library(ggplot2)
 library(stargazer)
 
-all_skills_mos<-read_csv("./data/working/all_skill_mos_network.csv") %>% as.data.table()
+mos_skills<-readRDS("./data/working/mos_skill.Rds") %>% as.data.table()
+soc_skills<-readRDS("./data/working/soc_skill_bls_long.Rds")%>% as.data.table()
+skill_uq<-read_csv("./data/working/skill_network_unique.csv") %>% as.data.table()
+
+all_skills_mos<-readRDS("./data/working/all_mos_skill_long.Rds") %>% as.data.table()
 all_skills_soc<-readRDS("./data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
 all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
 all_skill<-read_csv("./data/working/all_skill_mos_network.csv")
@@ -54,7 +60,7 @@ ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fi
 
 #### Specialized Skills
 ```{r Specialized Skill Frequency, echo=FALSE}
-all_skills_mos_specialized<-all_skills_mos %>% filter.(skill_type == "Specialized")
+all_skills_mos_specialized<-all_skill %>% filter.(skill_type == "Specialized")
 freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% as.data.table()
 freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n(10)
 
@@ -63,7 +69,7 @@ ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(s
   scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
 ```
 
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skills_mos_specialized %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -84,7 +90,7 @@ all_skills_mos_specialized %>%
 
 ```
 
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skills_mos_specialized %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -106,7 +112,7 @@ all_skills_mos_specialized %>%
 
 ####  Software Skills
 ```{r Specialized Skill Frequency 2, echo=FALSE}
-all_skills_mos_software <- all_skills_mos %>% filter.(skill_type=="Software")
+all_skills_mos_software <- all_skill %>% filter.(skill_type=="Software")
 freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.data.table()
 freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10)
 
@@ -115,7 +121,7 @@ ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
 ```
 
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skills_mos_software %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -135,7 +141,7 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skills_mos_software %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -157,7 +163,7 @@ all_skills_mos_software %>%
 
 
 ####  Unique Skills
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -177,7 +183,7 @@ all_skill_uq %>%
        title = "Army SOC Code Skills")
 ```
 
-```{r, echo=FALSE}
+```{r, fig.height=10, echo=FALSE}
 all_skill_uq %>%
   na.omit()%>%
   select(target, source, e_freq) %>%
@@ -246,7 +252,7 @@ all_skill %>%
 
 # Baseline Skill Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_baseline<-all_skills_mos_specialized<-all_skills_mos %>% filter.(isbaseline==TRUE)
+all_skills_baseline<-all_skills_mos %>% filter.(isbaseline==TRUE)
 all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS Title`]
@@ -261,7 +267,8 @@ ggplot(all_skills_baseline_top, aes(fill=skill, y=freq, x=`Army MOS Title`))+
 
 # Specialized Skills Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
+all_mos_skills_specialized<-all_skills_mos %>% filter.(isspecialized==TRUE)
+all_skills_mos_specialized_top<-all_mos_skills_specialized %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
@@ -275,7 +282,8 @@ ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`
 
 # Software Skills Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+all_mos_skills_software<-all_skills_mos %>% filter.(issoftware==TRUE)
+all_skills_mos_software_top<-all_mos_skills_software %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
 all_skills_mos_software_top<-all_skills_mos_software_top %>%

@@ -46,7 +46,7 @@ ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=c
   scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))
 
 ## 2.3: stacked bar chart (each bar is an MOS, each section is frequency of a top 10 skill)
-all_skills_baseline<-all_skills_mos_specialized<-all_skills_mos %>% filter.(isbaseline==TRUE)
+all_skills_baseline<-all_skills_mos %>% filter.(isbaseline==TRUE)
 all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS Title`]
