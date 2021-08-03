@@ -293,6 +293,7 @@ ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`
   theme(text=element_text(size=9), legend.text=element_text(size=7))
 ```
 
+
 # Software Skills Top 10 Percentages
 ```{r, echo=FALSE}
 all_skills_software_mos<-all_skills_mos %>% filter(issoftware==TRUE)
@@ -308,4 +309,6 @@ ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Arm
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_software_top$`Army MOS Title`), width=10))+
   theme(text=element_text(size=9), legend.text=element_text(size=7))
 ```
+The top 10 most popular skills in each MOS include a large proportion of Microsoft related skills (Excel, Word, Windows, etc). Other, more specialized skills such as SQL an AutoCAD only appear among a few MOS top 10 skills, and it could be due to the fact that Microsoft tools are more widely used, while more specialized software skills may not be as widely needed among all.
+
 ### Networks
