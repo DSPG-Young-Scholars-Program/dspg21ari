@@ -263,7 +263,7 @@ Based on the salary for each MOS based on their skill, the average salary for jo
 
 # Baseline Skill Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_baseline<-all_skills_mos_specialized<-all_skills_mos %>% filter.(isbaseline==TRUE)
+all_skills_baseline<-all_skills_mos %>% filter.(isbaseline==TRUE)
 all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS Title`]
@@ -278,9 +278,12 @@ ggplot(all_skills_baseline_top, aes(fill=skill, y=freq, x=`Army MOS Title`))+
 
 # Specialized Skills Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
-  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
+all_skills_specialized_mos<-all_skills_mos %>% filter(isspecialized==TRUE)
+all_skills_mos_specialized_top<-all_skills_mos %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top%>% as.data.table() %>% setkey(freq)
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
+
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
   mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
 ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
@@ -292,14 +295,16 @@ ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`
 
 # Software Skills Top 10 Percentages
 ```{r, echo=FALSE}
-all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+all_skills_software_mos<-all_skills_mos %>% filter(issoftware==TRUE)
+all_skills_mos_software_top<-all_skills_software_mos %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
+
 all_skills_mos_software_top<-all_skills_mos_software_top %>%
   mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
 ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
   geom_bar(position='fill', stat='identity')+
-  labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
+  labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Software skills for a MOS", fill="Skill")+
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_software_top$`Army MOS Title`), width=10))+
   theme(text=element_text(size=9), legend.text=element_text(size=7))
 ```

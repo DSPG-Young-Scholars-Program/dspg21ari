@@ -46,7 +46,7 @@ ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=c
   scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))
 
 ## 2.3: stacked bar chart (each bar is an MOS, each section is frequency of a top 10 skill)
-all_skills_baseline<-all_skills_mos_specialized<-all_skills_mos %>% filter.(isbaseline==TRUE)
+all_skills_baseline<-all_skills_mos %>% filter.(isbaseline==TRUE)
 all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS Title`]
@@ -210,22 +210,24 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ## 3.4: stacked barchart?
 # Specialized
-all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(source, target) %>%
-  summarise(freq=n()) %>% select(source, target, freq)
+all_skills_specialized_mos<-all_skills_mos %>% filter(isspecialized==TRUE)
+all_skills_mos_specialized_top<-all_skills_specialized_mos %>% group_by(`Army MOS Title`, skill) %>%
+  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq)
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top%>% as.data.table() %>% setkey(freq)
-all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=source]
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
 
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
-  mutate.(percentage=freq/sum(freq), .by=source) %>% ungroup()
-ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(target, 10), y=freq, x=source))+
+  mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
+ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
   geom_bar(position='fill', stat='identity')+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
-  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$source), width=10))+
+  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$`Army MOS Title`), width=10))+
   theme(text=element_text(size=9), legend.text=element_text(size=7))
 
 
 # Software
-all_skills_mos_software_top<-all_skills_mos_software %>% group_by(`Army MOS Title`, skill) %>%
+all_skills_software_mos<-all_skills_mos %>% filter(issoftware==TRUE)
+all_skills_mos_software_top<-all_skills_software_mos %>% group_by(`Army MOS Title`, skill) %>%
   summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
 all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Army MOS Title`]
 
