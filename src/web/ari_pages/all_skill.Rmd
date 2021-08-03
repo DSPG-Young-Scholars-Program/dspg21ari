@@ -51,6 +51,8 @@ ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fi
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (All) Frequency")+
   scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))
 ```
+Many of the top skills are also the top baseline skills (communication skills, physical ability, organizational skills, detail-oriented, English), indicating the importance of many of these baseline skills.
+
 
 #### Specialized Skills
 ```{r Specialized Skill Frequency, echo=FALSE}
@@ -63,6 +65,7 @@ ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(s
   scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
 ```
 
+
 ```{r, echo=FALSE}
 all_skills_mos_specialized %>%
   na.omit()%>%
@@ -79,7 +82,7 @@ all_skills_mos_specialized %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Specialized Skill Frequency Weighted by Employment (1)", y = NULL,
        title = "Army SOC Code Skills")
 
 ```
@@ -100,9 +103,11 @@ all_skills_mos_specialized %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Specialized Skill Frequency Weighted by Employment (2)", y = NULL,
        title = "Army SOC Code Skills")
 ```
+The top 5 specialized skills for each MOS are approximately the same once weighted by employment.
+
 
 ####  Software Skills
 ```{r Specialized Skill Frequency 2, echo=FALSE}
@@ -111,9 +116,11 @@ freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.dat
 freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10)
 
 ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
-  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Softwawre)")+
+  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Software)")+
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
 ```
+SAP is a business software, and combined with the presence of Salesforce and ERP, indicates a demand for software centered around commerce.
+
 
 ```{r, echo=FALSE}
 all_skills_mos_software %>%
@@ -131,7 +138,7 @@ all_skills_mos_software %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Software Skills Frequency Weighted by Employment (1)", y = NULL,
        title = "Army SOC Code Skills")
 ```
 
@@ -151,9 +158,10 @@ all_skills_mos_software %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Software Skills Frequency Weighted by Employment(2)", y = NULL,
        title = "Army SOC Code Skills")
 ```
+The top 5 software skills are also the same for each MOS, and reflect the top software skills overall.
 
 
 ####  Unique Skills
@@ -173,7 +181,7 @@ all_skill_uq %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Unique Skill Frequency Weighted by Employment (1)", y = NULL,
        title = "Army SOC Code Skills")
 ```
 
@@ -193,9 +201,13 @@ all_skill_uq %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Skill Frequency Weighted by Employment", y = NULL,
+  labs(x = "Unique Skill Frequency Weighted by Employment (2)", y = NULL,
        title = "Army SOC Code Skills")
 ```
+
+Unique skills are defined as skills that aren't seen across all 10 MOS, although the most common unique skills--digital signal processing, game development, cutting in and creative writing are seen across 9 of the 10 MOS.
+
+
 # Employment by MOS (1)
 ```{r, echo=FALSE}
 all_skill %>%
@@ -219,6 +231,8 @@ all_skill %>%
   labs(x = "MOS", y = NULL,
        title = "Average Employment per MOS (2)")
 ```
+Based on BLS data on projected employment for jobs, the average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen.
+
 
 # Salary by MOS (1)
 ```{r, echo=FALSE}
@@ -232,6 +246,7 @@ all_skill %>%
        title = "Average Income per MOS (1)")
 ```
 
+
 # Salary by MOS (2)
 ```{r, echo=FALSE}
 all_skill %>%
@@ -243,6 +258,8 @@ all_skill %>%
   labs(x = "MOS", y = NULL,
        title = "Average Income per MOS (2)")
 ```
+
+Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistant across MOS.
 
 # Baseline Skill Top 10 Percentages
 ```{r, echo=FALSE}

@@ -210,16 +210,17 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ## 3.4: stacked barchart?
 # Specialized
-all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(`Army MOS Title`, skill) %>%
-  summarise(freq=n()) %>% select(`Army MOS Title`, skill, freq) %>% as.data.table() %>% setkey(freq)
-all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=`Army MOS Title`]
+all_skills_mos_specialized_top<-all_skills_mos_specialized %>% group_by(source, target) %>%
+  summarise(freq=n()) %>% select(source, target, freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top%>% as.data.table() %>% setkey(freq)
+all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), by=source]
 
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
-  mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
-ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
+  mutate.(percentage=freq/sum(freq), .by=source) %>% ungroup()
+ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(target, 10), y=freq, x=source))+
   geom_bar(position='fill', stat='identity')+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
-  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$`Army MOS Title`), width=10))+
+  scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$source), width=10))+
   theme(text=element_text(size=9), legend.text=element_text(size=7))
 
 
