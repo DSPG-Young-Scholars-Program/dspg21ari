@@ -127,7 +127,7 @@ all_skills_mos_software <- all_skill %>% filter.(skill_type=="Software")
 freq_software_skill<-all_skills_mos_software %>% select(target, freq) %>% as.data.table()
 freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10)
 ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
-  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Softwawre)")+
+  labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Software)")+
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))+
   guides(x =  guide_axis(angle = 45))
 ```
@@ -222,7 +222,7 @@ all_skill_uq %>%
 Unique skills are defined as skills that aren't seen across all 10 MOS, although the most common unique skills--digital signal processing, game development, cutting in and creative writing are seen across 9 of the 10 MOS.
 
 
-# Employment by MOS (1)
+# Employment by MOS
 ```{r, echo=FALSE}
 all_skill %>%
   na.omit()%>%
@@ -235,7 +235,6 @@ all_skill %>%
   guides(x =  guide_axis(angle = 45))
 ```
 
-# Employment by MOS (2)
 ```{r, echo=FALSE}
 all_skill %>%
   na.omit()%>%
@@ -251,7 +250,7 @@ all_skill %>%
 Based on BLS data on projected employment for jobs, the average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen.
 
 
-# Salary by MOS (1)
+# Salary by MOS
 ```{r, echo=FALSE}
 all_skill %>%
   na.omit()%>%
@@ -264,8 +263,6 @@ all_skill %>%
   guides(x =  guide_axis(angle = 45))
 ```
 
-
-# Salary by MOS (2)
 ```{r, echo=FALSE}
 all_skill %>%
   na.omit()%>%
