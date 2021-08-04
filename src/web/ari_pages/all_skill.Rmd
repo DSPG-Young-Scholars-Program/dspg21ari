@@ -327,6 +327,6 @@ ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Arm
 
 
 ### Networks
-![All skills network](./src/web/ari_pages/images/all_skills.png) 
+![All skills network](./images/all_skills.png) 
 
-![linking MOS and SOC codes](./src/web/ari_pages/images/mos_soc.png) 
+![linking MOS and SOC codes](./images/mos_soc.png) 

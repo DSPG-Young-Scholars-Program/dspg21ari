@@ -122,4 +122,4 @@ skill_uq %>%
 ```
 
 ### Networks
-![Baseline skills network](./src/web/ari_pages/images/baseline.png) 
+![Baseline skills network](./images/baseline.png) 
