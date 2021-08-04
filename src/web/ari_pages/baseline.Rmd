@@ -12,7 +12,10 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 root.dir = rprojroot::find_rstudio_root_file()
+```
 
+
+```{r, echo=FALSE}
 library(data.table)
 library(tidytable)
 library(maditr)
@@ -23,7 +26,6 @@ library(stargazer)
 ```
 
 ```{r data}
-
 mos_skills<-readRDS("./data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("./data/working/soc_skill_bls_long.Rds")%>% as.data.table()
 skill_uq<-read_csv("./data/working/skill_network_unique.csv") %>% as.data.table()
@@ -33,17 +35,13 @@ all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
 all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
-
 #generate tables used for the rest of the document
 skills_top<-sort(table(soc_skills$skill), decreasing=TRUE)
 skills_top<-skills_top%>% sort(decreasing = TRUE) %>% as.data.table()
-
 # misc
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
-
 mos_1<-c("Cannon Crewmember", "Cavalry Scout", "Combat Engineer", "Combat Medic Specialist", "Infantryman")
 mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Supply Specialist", "Wheeled Vehicle Repairer")
-
 ```
 
 ### Exploratory Data Analysis
@@ -116,3 +114,4 @@ skill_uq %>%
 ```
 
 ### Networks
+![Baseline skills network](./src/web/ari_pages/images/baseline.png) 
