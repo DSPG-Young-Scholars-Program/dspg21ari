@@ -30,6 +30,9 @@ all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
 all_skill<-read_csv("./data/working/all_skill_mos_network.csv")
 
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
+distinct_col<-c("#000000", "#696969","#556b2f", "#a0522d", "#7f0000", "#191970", "#808000", "#008000", "#008080",
+                "#4682b4", "#9acd32", "#00008b", "#daa520", "#7f007f", "#8fbc8f", "#b03060", "#d2b48c", "#ff4500",
+                "#00ced1", "#ff8c00", "#6a5acd", "#ffff00", "#0000cd", "#00ff00", "#ba55d3", "#00ff7f", "dc143c")
 
 mos_1<-c("Cannon Crewmember", "Cavalry Scout", "Combat Engineer", "Combat Medic Specialist", "Infantryman")
 mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Supply Specialist", "Wheeled Vehicle Repairer")
@@ -53,7 +56,7 @@ freq_all_skill<-table(all_skills_mos$skill) %>% as.data.table()
 freq_all_skill<-freq_all_skill[order(-N)] %>% top_n(10)
 ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (All) Frequency")+
-  scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))
+  scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))+guides(x =  guide_axis(angle = 45))
 ```
 
 
@@ -112,6 +115,7 @@ all_skills_mos_specialized %>%
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 ```
+
 The top 5 specialized skills for each MOS are approximately the same once weighted by employment.
 
 
@@ -123,8 +127,10 @@ freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10
 
 ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Softwawre)")+
-  scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))
+  scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))+
+  guides(x =  guide_axis(angle = 45))
 ```
+
 SAP is a business software, and combined with the presence of Salesforce and ERP, indicates a demand for software centered around commerce.
 
 
@@ -167,6 +173,7 @@ all_skills_mos_software %>%
   labs(x = "Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 ```
+
 The top 5 software skills are also the same for each MOS, and reflect the top software skills overall.
 
 
@@ -187,7 +194,7 @@ all_skill_uq %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Unique Skill Frequency Weighted by Employment (1)", y = NULL,
+  labs(x = "Unique Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 ```
 
@@ -207,7 +214,7 @@ all_skill_uq %>%
   scale_fill_manual(values=colors) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~source, ncol = 1, scales = "free") +
-  labs(x = "Unique Skill Frequency Weighted by Employment (2)", y = NULL,
+  labs(x = "Unique Skill Frequency Weighted by Employment", y = NULL,
        title = "Army SOC Code Skills")
 ```
 
@@ -223,7 +230,8 @@ all_skill %>%
   ggplot(aes(source, employ)) +
   stat_summary(fun=mean, geom="bar", fill=colors[1])+
   labs(x = "MOS", y = NULL,
-       title = "Average Employment per MOS (1)")
+       title = "Average Employment per MOS")+
+  guides(x =  guide_axis(angle = 45))
 ```
 
 # Employment by MOS (2)
@@ -235,8 +243,10 @@ all_skill %>%
   ggplot(aes(source, employ)) +
   stat_summary(fun=mean, geom="bar", fill=colors[1])+
   labs(x = "MOS", y = NULL,
-       title = "Average Employment per MOS (2)")
+       title = "Average Employment per MOS")+
+  guides(x =  guide_axis(angle = 45))
 ```
+
 Based on BLS data on projected employment for jobs, the average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen.
 
 
@@ -249,7 +259,8 @@ all_skill %>%
   ggplot(aes(source, salary)) +
   stat_summary(fun=mean, geom="bar", fill=colors[1])+
   labs(x = "MOS", y = NULL,
-       title = "Average Income per MOS (1)")
+       title = "Average Income per MOS")+
+  guides(x =  guide_axis(angle = 45))
 ```
 
 
@@ -262,7 +273,8 @@ all_skill %>%
   ggplot(aes(source, salary)) +
   stat_summary(fun=mean, geom="bar", fill=colors[1])+
   labs(x = "MOS", y = NULL,
-       title = "Average Income per MOS (2)")
+       title = "Average Income per MOS")+
+  guides(x =  guide_axis(angle = 45))
 ```
 
 Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistant across MOS.
@@ -276,10 +288,10 @@ all_skills_baseline_top<-all_skills_baseline_top[, tail(.SD, 10), by=`Army MOS T
 all_skills_baseline_top<-all_skills_baseline_top %>%
   mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
 ggplot(all_skills_baseline_top, aes(fill=skill, y=freq, x=`Army MOS Title`))+
-  geom_bar(position='fill', stat='identity')+
+  geom_bar(position='fill', stat='identity')+scale_fill_manual(values=distinct_col)+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS")+
   scale_x_discrete(labels=str_wrap(unique(all_skills_baseline_top$`Army MOS Title`), width=10))+
-  theme(text=element_text(size=9))
+  theme(text=element_text(size=9))+guides(x =  guide_axis(angle = 45))
 ```
 
 # Specialized Skills Top 10 Percentages
@@ -291,10 +303,10 @@ all_skills_mos_specialized_top<-all_skills_mos_specialized_top[, tail(.SD, 10), 
 all_skills_mos_specialized_top<-all_skills_mos_specialized_top %>%
   mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
 ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
-  geom_bar(position='fill', stat='identity')+
+  geom_bar(position='fill', stat='identity')+scale_fill_manual(values=distinct_col)+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Specialized skills for a MOS", fill="Skill")+
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$`Army MOS Title`), width=10))+
-  theme(text=element_text(size=9), legend.text=element_text(size=7))
+  theme(text=element_text(size=9), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
 ```
 
 # Software Skills Top 10 Percentages
@@ -306,9 +318,14 @@ all_skills_mos_software_top<-all_skills_mos_software_top[, tail(.SD, 10), by=`Ar
 all_skills_mos_software_top<-all_skills_mos_software_top %>%
   mutate.(percentage=freq/sum(freq), .by=`Army MOS Title`) %>% ungroup()
 ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Army MOS Title`))+
-  geom_bar(position='fill', stat='identity')+
+  geom_bar(position='fill', stat='identity')+scale_fill_manual(values=distinct_col)+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Baseline skills for a MOS", fill="Skill")+
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_software_top$`Army MOS Title`), width=10))+
-  theme(text=element_text(size=9), legend.text=element_text(size=7))
+  theme(text=element_text(size=9), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
 ```
+
+
 ### Networks
+![All skills network](./src/web/ari_pages/images/all_skills.png) 
+
+![linking MOS and SOC codes](./src/web/ari_pages/images/mos_soc.png) 

@@ -12,7 +12,10 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 root.dir = rprojroot::find_rstudio_root_file()
+```
 
+
+```{r, echo=FALSE}
 library(data.table)
 library(tidytable)
 library(maditr)
@@ -116,3 +119,4 @@ skill_uq %>%
 ```
 
 ### Networks
+![Baseline skills network](./src/web/ari_pages/images/baseline.png) 
