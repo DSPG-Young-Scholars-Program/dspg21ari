@@ -267,7 +267,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Manpower Planning with Army Administrative Data</a>
+      <a class="navbar-brand" href="index.html"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -327,6 +327,13 @@ $(document).ready(function () {
 </div>
 
 
+<script type="text/javascript">
+
+   document.getElementsByTagName('a')[0].innerHTML = '<img src="images/DSPG_white-01.png" width="120px" />'
+
+   document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
+
+</script>
 <p>Our analysis is conducted at the national level and only for the year 2019 in order to focus the scope. There could be limitations to the employment and salary estimates, or even skills needed for jobs, depending on which location a veteran may be looking for a job. Our analysis is also limited by the scope of the O<em>NET crosswalk. The O</em>NET Crosswalk is based on survey data on knowledge, skills, and abilities (KSAs) acquired in the army and matched to civilian jobs, but in further review using Burning Glass data has created skill vectors that include unlikely or strange skills that MOS's might not provide veterans. For example, in the healthcare industry example the skills acquired in matching jobs to matched SOC codes provided that Army officers may know about cement masonry, a skill outside the scope of the Army's needs. The crosswalk also used MOS-specific KSAs to match to unique SOC codes, but from our analysis of unique skills we can see that most highly employable or frequent skills aren't unique to MOS's. Thus, the crosswalk has produced skills and job connections that are unhelpful. This should serve as a warning sign that crosswalks may not often be as informed as is necessary.</p>
 <p>The skills that we have parsed and attached to MOS's implies that there are large similarities in skills acquired across each MOS. In general, Army officers are well prepared with most baseline skills no matter their station. There is, of course, work to be done as this is not accurate. The <a href="https://www.bls.gov/ooh/military/military-careers.htm?view_full">BLS provided clasification</a> of Army members by sub-Army industry and as there are distributions across types of jobs we would expect to see different types of skills from different MOS's.</p>
 

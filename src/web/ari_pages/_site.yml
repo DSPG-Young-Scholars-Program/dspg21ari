@@ -1,7 +1,7 @@
 name: "ari-website"
 output_dir: "../../../docs"
 navbar:
-  title: "Manpower Planning with Army Administrative Data"
+  title:
   left:
     - text: "Overview"
       href: index.html

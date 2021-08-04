@@ -267,7 +267,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Manpower Planning with Army Administrative Data</a>
+      <a class="navbar-brand" href="index.html"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -327,6 +327,13 @@ $(document).ready(function () {
 </div>
 
 
+<script type="text/javascript">
+
+   document.getElementsByTagName('a')[0].innerHTML = '<img src="images/DSPG_white-01.png" width="120px" />'
+
+   document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
+
+</script>
 <div id="exploratory-data-analysis" class="section level3">
 <h3>Exploratory Data Analysis</h3>
 <table style="text-align:center">
@@ -366,7 +373,7 @@ Max
 </tr>
 <tr>
 <td style="text-align:left">
-tot_emp
+Employment
 </td>
 <td>
 170
@@ -392,7 +399,7 @@ tot_emp
 </tr>
 <tr>
 <td style="text-align:left">
-a_mean
+Salary
 </td>
 <td>
 170
@@ -429,54 +436,54 @@ a_mean
 <div id="specialized-skills" class="section level4">
 <h4>Specialized Skills</h4>
 <p><img src="all_skill_files/figure-html/Specialized%20Skill%20Frequency-1.png" width="672" /></p>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p><img src="all_skill_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>The top 5 specialized skills for each MOS are approximately the same once weighted by employment.</p>
 </div>
 <div id="software-skills" class="section level4">
 <h4>Software Skills</h4>
 <p><img src="all_skill_files/figure-html/Software%20Skill%20Frequency-1.png" width="672" /></p>
 <p>SAP is a business software, and combined with the presence of Salesforce and ERP, indicates a demand for software centered around commerce.</p>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p><img src="all_skill_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The top 5 software skills are also the same for each MOS, and reflect the top software skills overall.</p>
 </div>
 <div id="unique-skills" class="section level4">
 <h4>Unique Skills</h4>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p><img src="all_skill_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>Unique skills are defined as skills that aren't seen across all 10 MOS, although the most common unique skills--digital signal processing, game development, cutting in and creative writing are seen across 9 of the 10 MOS.</p>
 </div>
 </div>
 <div id="employment-by-mos-1" class="section level1">
 <h1>Employment by MOS (1)</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="employment-by-mos-2" class="section level1">
 <h1>Employment by MOS (2)</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Based on BLS data on projected employment for jobs, the average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen.</p>
 </div>
 <div id="salary-by-mos-1" class="section level1">
 <h1>Salary by MOS (1)</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="salary-by-mos-2" class="section level1">
 <h1>Salary by MOS (2)</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistant across MOS.</p>
 </div>
 <div id="baseline-skill-top-10-percentages" class="section level1">
 <h1>Baseline Skill Top 10 Percentages</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 <div id="specialized-skills-top-10-percentages" class="section level1">
 <h1>Specialized Skills Top 10 Percentages</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 <div id="software-skills-top-10-percentages" class="section level1">
 <h1>Software Skills Top 10 Percentages</h1>
-<p><img src="all_skill_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="all_skill_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <div id="networks" class="section level3">
 <h3>Networks</h3>
 <div class="figure">

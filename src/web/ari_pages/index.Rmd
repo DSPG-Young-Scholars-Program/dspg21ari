@@ -1,9 +1,16 @@
 ---
-title: "Overview"
+title: "Manpower Planning using\n Army Administrative Data"
 output: 
   html_document:
     theme: cerulean
 ---
+```{js echo=FALSE}
+
+   document.getElementsByTagName('a')[0].innerHTML = '<img src="./images/DSPG_white-01.png" width="120px" />'
+
+   document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
+
+```
 
 This project is a part of the larger collaboration between the U.S. Army Research Institue for the Behavioral and Social Sciences and the Social and Decision Analytics at University of Virginia. In previous summer projects students have worked on modeling Army career pathways. Last summer students worked with ARI to provide insight into retention in the Army, one of the factors of manpower planning.
 
