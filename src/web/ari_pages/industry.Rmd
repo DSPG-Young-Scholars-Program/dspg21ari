@@ -110,9 +110,9 @@ fig2 <- army_health %>%
 fig2
 ```
 
-## Unique Skills
+## Unmatched Skills
 
-Within the skills that are different in matched an unmatched SOC codes there are large differences, but also small numbers of non-connected skills. This shows that most skills can be gained in the army that can translate into jobs in healthcare, even jobs that are different from Army jobs. Baseline skills are sparse and very small in their weighted importance. Software and Specialized skills are also small in their weighted importance, but there is a larger list of skills. For example, within Army SOC skills they learn more skills about tools as listed within specialized skills, but non-Army specialized skills contain more analysis or medicine-specific skills.
+Within the skills that are different in matched an unmatched SOC codes there are large differences, but also small numbers of non-connected skills. This shows that most skills can be gained in the army that can translate into jobs in healthcare, even jobs that are different from Army jobs. Baseline skills are sparse and very small in their weighted importance. Software and Specialized skills are also small in their weighted importance, but there is a larger list of skills. For example, within Army SOC skills they learn more skills about tools as listed within specialized skills, but non-Army specialized skills contain more analysis or medicine-specific skills. This showcases that the Army provides their officers with more bue-collar working skills than more specialized medical skills.
 
 ```{r unique graphs, echo= FALSE}
 fig3 <- non_army_health %>%
