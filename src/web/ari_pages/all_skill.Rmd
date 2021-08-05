@@ -72,7 +72,7 @@ ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fi
 ```
 
 
-Many of the top skills are also the top baseline skills (communication skills, physical ability, organizational skills, detail-oriented, English), indicating the importance of many of these baseline skills.
+Many of the top skills overall are also the top baseline skills (communication skills, physical ability, organizational skills, detail-oriented, English), indicating the importance of many of these baseline skills in the workforce.
 
 
 #### Specialized Skills
@@ -82,9 +82,10 @@ freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% 
 freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n(10)
 ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Specialized)")+
-  scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))+
-  guides(x =  guide_axis(angle = 45))
+  scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))+theme(text=element_text(size=9))+
+  guides(x =  guide_axis(angle = 45))+ylim(0, 700)
 ```
+Some of the most common specialized skills include cleaning, repair and teamwork. It's worth noting that these skills occur at a much lower rate than any of the baseline skills, implying that the baseline skills still carry more weight and value in the workforce.
 
 
 ```{r, fig.height=10, echo=FALSE}
@@ -127,7 +128,7 @@ all_skills_mos_specialized %>%
        title = "Army SOC Code Skills")
 ```
 
-The top 5 specialized skills for each MOS are approximately the same once weighted by employment.
+The top 5 specialized skills for each MOS are approximately the same once weighted by employment, implying that regardless of the MOS, they utilize similar sets of specialized skills.
 
 
 ####  Software Skills
@@ -138,10 +139,10 @@ freq_software_skill<-freq_software_skill[order(-freq)] %>% unique() %>% top_n(10
 ggplot(freq_software_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Software)")+
   scale_x_discrete(labels = str_wrap(freq_software_skill$target, width = 8))+
-  guides(x =  guide_axis(angle = 45))
+  guides(x =  guide_axis(angle = 45))+theme(text=element_text(size=9))+ylim(0, 700)
 ```
 
-SAP is a business software, and combined with the presence of Salesforce and ERP, indicates a demand for software centered around commerce.
+By far the highest occurrence of a software skill is that of SAP, which is a business software. Combined with the presence of Salesforce and ERP, indicates a demand for software centered around commerce and business. These also occur at a much lower rate than the baseline skills, which indicates that they are still not as ubiquitous as the baseline skills
 
 
 ```{r, fig.height=10, echo=FALSE}
@@ -184,7 +185,7 @@ all_skills_mos_software %>%
        title = "Army SOC Code Skills")
 ```
 
-The top 5 software skills are also the same for each MOS, and reflect the top software skills overall.
+The top 5 software skills are also the same for each MOS, and reflect the top software skills overall. However, once weighted by employment and salary, they have a very low weighted score. This could be that in terms of salary or employment projection, they are not as high as other skills.
 
 
 ####  Unique Skills
@@ -232,6 +233,9 @@ Unique skills are defined as skills that aren't seen across all 10 MOS, although
 
 
 # Employment by MOS
+
+BLS labor statistics were used to determine the average employment and salary for jobs associated with given skills. For each MOS, the salary and employment estimates of jobs associated with skills acquired from a MOS were averaged and used to determine average employment and 
+
 ```{r, echo=FALSE}
 all_skill %>%
   na.omit()%>%
@@ -256,7 +260,7 @@ all_skill %>%
   guides(x =  guide_axis(angle = 45))
 ```
 
-Based on BLS data on projected employment for jobs, the average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen.
+The average predicted employment for each MOS was taken based on their skills. The highest average employment predicted was for combat medic specialists, intelligence analysts and unit supply specialists while the lowest were for M1 Armor Crewmen and Infantrymen. 
 
 
 # Salary by MOS
@@ -284,9 +288,12 @@ all_skill %>%
   guides(x =  guide_axis(angle = 45))
 ```
 
-Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistant across MOS.
+Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistent across MOS. This could be due to the number of overlapping skills and jobs shared across SOC codes, which are common amongst all MOS.
 
 # Baseline Skill Top 10 Percentages
+
+Finally, we look at which skills are the top 10 skills for each MOS, and the percentage of the top 10 skill in terms of frequency. Across baseline, all specialized and software skills, we see that the overall top 10 skills are included in almost all of these individual MOS top 10 skills.
+
 ```{r, echo=FALSE}
 all_skills_baseline<-all_skills_mos %>% filter.(isbaseline==TRUE)
 all_skills_baseline_top<-all_skills_baseline %>% group_by(`Army MOS Title`, skill) %>%
@@ -301,7 +308,11 @@ ggplot(all_skills_baseline_top, aes(fill=skill, y=freq, x=`Army MOS Title`))+
   theme(text=element_text(size=9))+guides(x =  guide_axis(angle = 45))
 ```
 
+We see physical ability, communication, organization and problem solving appearing in almost each MOS's top 10 skills. We also observe that each skill has about the same percentage among the top 10 skills.
+
+
 # Specialized Skills Top 10 Percentages
+
 ```{r, echo=FALSE}
 all_mos_skills_specialized<-all_skills_mos %>% filter.(isspecialized==TRUE)
 all_skills_mos_specialized_top<-all_mos_skills_specialized %>% group_by(`Army MOS Title`, skill) %>%
@@ -313,8 +324,11 @@ ggplot(all_skills_mos_specialized_top, aes(fill=str_wrap(skill, 10), y=freq, x=`
   geom_bar(position='fill', stat='identity')+scale_fill_manual(values=distinct_col)+
   labs(x="Army MOS", y="Percentage", title="Percentage of Skill in the Top 10 Specialized skills for a MOS", fill="Skill")+
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_specialized_top$`Army MOS Title`), width=10))+
-  theme(text=element_text(size=9), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
+  theme(text=element_text(size=7.5), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
 ```
+
+Here, we again see other top 10 specialized skills such as scheduling, cleaning and customer service occurring for all MOS in the top 10. We also see some skills occurring in only one MOS such as welding for infantrymen and CPR for armor crewman.
+
 
 # Software Skills Top 10 Percentages
 ```{r, echo=FALSE}
@@ -330,6 +344,8 @@ ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Arm
   scale_x_discrete(labels=str_wrap(unique(all_skills_mos_software_top$`Army MOS Title`), width=10))+
   theme(text=element_text(size=9), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
 ```
+
+The software skills have the most consistent set of top 10 skills across MOS, with most sharing the same set of 10 skills. Some outliers include SQL for military police and AutoCAD for cannon crewmembers, infantrymen and M1 Armor Crewmen.
 
 
 ### Networks
