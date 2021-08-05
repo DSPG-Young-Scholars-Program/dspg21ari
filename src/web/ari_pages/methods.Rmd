@@ -15,14 +15,14 @@ output:
 
 ### Methods
 
-Our project methods are data linking, weighting, and network visualiiation methods. 
+Our project methods are data linking, weighting, and network visualization methods. 
 
 #### Data Linkage
-We connected O*NET's crosswalk with Burning Glass data to create skill vectors for each civillian occupation and Army occupation. We then connected this data via SOC codes to BLS data which provided us average estimates of employment and salary for each SOC code, skill, and Army Occupation. This produced a dataframe of skills acquried by veterans which can be used for their resumes in their transition to civillian life. One of the big problems with transitions is the [culture differences](https://blogs.va.gov/VAntage/6603/why-can%E2%80%99t-veterans-get-jobs/) between military members and civillians. Our hope is that this data frame of skills will help guide veterans in tailoring their resumes with skills understandable by civillian employers who may not be able to translate Army occupations into skills related to their fields.
+We connected O*NET's crosswalk with Burning Glass data to create skill vectors for each civilian occupation and Army occupation. We then connected this data via SOC codes to BLS data which provided us average estimates of employment and salary for each SOC code, skill, and Army Occupation. This produced a data-frame of skills acquired by veterans which can be used for their resumes in their transition to civilian life. One of the big problems with transitions is the [culture differences](https://blogs.va.gov/VAntage/6603/why-can%E2%80%99t-veterans-get-jobs/) between military members and civilians. Our hope is that this data frame of skills will help guide veterans in tailoring their resumes with skills understandable by civilian employers who may not be able to translate Army occupations into skills related to their fields.
 
 #### Data Weighting
-In order to determine which skills were more useful than others we weighted skill frequencies by employment and salary. This method allows us to penalize skills that have low employment and reweights the importance of a skill to a veteran who is searching for a job.
+In order to determine which skills were more useful than others we weighted skill frequencies by employment and salary. This method allows us to penalize skills that have low employment and re-weights the importance of a skill to a veteran who is searching for a job.
 
 #### Netwok Visualization
-We visualized the connection of Army MOS codes, SOC codes, and skills using networks. For each network MOS codes are directed towards either SOC codes or skills to create large visualizations of how MOS jobs connected to each other through the ability to be hiried into certain jobs or by the skills accrued in those Army jobs. These directed networks were created in R and visualized in [Gephi](https://gephi.org/).
+We visualized the connection of Army MOS codes, SOC codes, and skills using networks. For each network MOS codes are directed towards either SOC codes or skills to create large visualizations of how MOS jobs connected to each other through the ability to be hired into certain jobs or by the skills accrued in those Army jobs. These directed networks were created in R and visualized in [Gephi](https://gephi.org/).
 
