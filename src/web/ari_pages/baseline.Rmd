@@ -36,10 +36,11 @@ library(stargazer)
 ```{r data}
 mos_skills<-readRDS("./data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("./data/working/soc_skill_bls_long.Rds")%>% as.data.table()
+skill_net<-read_csv("./data/working/skill_network.csv")%>% as.data.table()
 skill_uq<-read_csv("./data/working/skill_network_unique.csv") %>% as.data.table()
-all_skills_mos<-read_csv("./data/working/all_skill_mos_network.csv") %>% as.data.table()
+
 all_skills_soc<-readRDS("./data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
-all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
+
 all_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
 all_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
@@ -61,8 +62,16 @@ baseline_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% un
 baseline_skills_wage<-all_skills_wage[complete.cases(all_skills_wage), ]
 baseline_skills_wage[,3]<-sapply(baseline_skills_wage[,3], as.numeric)
 ```
+
 ```{r stargaxer, results="asis"}
-stargazer(baseline_skills_wage, summary = TRUE, header = F, type='html', covariate.labels = c("Employment", "Salary"), column.sep.width = "10pt")
+Variables <- c("Employment", "Salary")
+summary_table <- data.frame(Variables)
+summary_table$Mean[1] <- mean(baseline_skills_wage$tot_emp)
+summary_table$Mean[2] <- mean(baseline_skills_wage$a_mean)
+summary_table$SD[1] <- sd(baseline_skills_wage$tot_emp)
+summary_table$SD[2] <- sd(baseline_skills_wage$a_mean)
+
+knitr::kable(summary_table)
 ```
 
 #####  Skill Frequency
@@ -71,12 +80,58 @@ The most common baseline skills acrued in the Army are highly employable and sal
 
 ```{r Baseline Skill Frequency, echo=FALSE}
 freq_skill<-table(soc_skills$skill) %>% as.data.table()
-freq_skill<-freq_skill[order(-N)] %>% top_n.(8)
+freq_skill<-freq_skill[order(-N)] %>% top_n.(10)
 ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Baseline Skill Frequency", y = NULL, title = "Army SOC Code Baseline Skills")+
-  scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))
+  scale_x_discrete(labels = str_wrap(freq_skill$V1, width = 10))+
+  guides(x =  guide_axis(angle = 45))
 ```
 
+```{r variation}
+# socs <- read_rds("./data/working/soc_skill_bls_long.Rds")
+# crosswalk <- read_excel("./data/original/crosswalk.xlsx")
+# 
+# # MOS to SOC (Long)
+# mos_skill_long <- left_join(crosswalk, socs, by = c("O*NET-SOC Code" = "onet"))
+# 
+# mos_skill_long %>%
+#   transmute(source = `Army MOS Title`, target = skill) %>%
+#   na.omit()%>%
+#   select(source, target) %>%
+#   group_by(source, target) %>%
+#   mutate(freq = n())%>%
+#   ungroup() %>%
+#   unique() %>%
+#   filter(source %in% mos_1) %>%
+#   group_by(target) %>%
+#   mutate(n = n(), sd1 = sd(freq), sd2 = sd(n)) %>%
+#   ungroup() %>%
+#   group_by(source) %>%
+#   arrange(desc(sd1)) %>%
+#   top_n(5) %>%
+#   ungroup() %>%
+#   ggplot(aes(sd1, fct_reorder(target, sd1), fill = source)) +
+#   scale_fill_manual(values=colors) +
+#   geom_col(show.legend = FALSE) +
+#   facet_wrap(~source, ncol = 1, scales = "free") +
+#   labs(x = "Standard Deviation of Skill", y = NULL,
+#        title = "Baseline Skill Variation by MOS")
+# 
+# skill_net %>%
+#   na.omit()%>%
+#   select(target, source, sd) %>%
+#   unique() %>%
+#   filter(source %in% mos_2) %>%
+#   slice_max(sd, n = 5) %>%
+#   ungroup() %>%
+#   ggplot(aes(sd, fct_reorder(target, sd), fill = source)) +
+#   scale_fill_manual(values=colors) +
+#   geom_col(show.legend = FALSE) +
+#   facet_wrap(~source, ncol = 1, scales = "free") +
+#   labs(x = "Standard Deviation of Skill", y = NULL,
+#        title = "Baseline Skill Variation by MOS")
+
+```
 #### Unique Skills
 
 We define unique skills as those not present in all 10 MOS's. Across thesse 10, the most unique are types of languages learned. Tis signals that language acquisititon is the most unique of skill traits to come out of Army jobs. This inherently mamkes sense. In the Army you'll learn lots of similar baseline skills like communication, physical skills, and discipline, but langauges are more tuned to which specific job you may do.

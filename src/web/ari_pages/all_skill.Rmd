@@ -5,11 +5,8 @@ output:
     theme: cerulean
 ---
 ```{js echo=FALSE}
-
    document.getElementsByTagName('a')[0].innerHTML = '<img src="./images/DSPG_white-01.png" width="120px" />'
-
    document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
-
 ```
 
 ```{r, echo=FALSE}
@@ -27,6 +24,7 @@ library(tidyverse)
 library(readxl)
 library(ggplot2)
 library(stargazer)
+
 mos_skills<-readRDS("./data/working/mos_skill.Rds") %>% as.data.table()
 soc_skills<-readRDS("./data/working/soc_skill_bls_long.Rds")%>% as.data.table()
 skill_uq<-read_csv("./data/working/skill_network_unique.csv") %>% as.data.table()
@@ -34,10 +32,12 @@ all_skills_mos<-readRDS("./data/working/all_mos_skill_long.Rds") %>% as.data.tab
 all_skills_soc<-readRDS("./data/working/all_soc_skill_bls_long.Rds") %>% as.data.table()
 all_skill_uq<-read_csv("./data/working/all_skill_unique.csv")
 all_skill<-read_csv("./data/working/all_skill_mos_network.csv")
+
 colors <- c("#232d4b","#2c4f6b","#0e879c","#60999a","#d1e0bf","#d9e12b","#e6ce3a","#e6a01d","#e57200","#fdfdfd")
 distinct_col<-c("#000000", "#696969","#556b2f", "#a0522d", "#7f0000", "#191970", "#808000", "#008000", "#008080",
                 "#4682b4", "#9acd32", "#00008b", "#daa520", "#7f007f", "#8fbc8f", "#b03060", "#d2b48c", "#ff4500",
                 "#00ced1", "#ff8c00", "#6a5acd", "#ffff00", "#0000cd", "#00ff00", "#ba55d3", "#00ff7f", "dc143c")
+
 mos_1<-c("Cannon Crewmember", "Cavalry Scout", "Combat Engineer", "Combat Medic Specialist", "Infantryman")
 mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Supply Specialist", "Wheeled Vehicle Repairer")
 ```
@@ -51,7 +51,14 @@ all_skills_wage[,3]<-sapply(all_skills_wage[,3], as.numeric)
 ```
 
 ```{r stargaxer, results="asis"}
-stargazer(all_skills_wage, summary = TRUE, header = F, type='html', covariate.labels = c("Employment", "Salary"), column.sep.width = "10pt")
+Variables <- c("Employment", "Salary")
+summary_table <- data.frame(Variables)
+summary_table$Mean[1] <- mean(all_skills_wage$tot_emp)
+summary_table$Mean[2] <- mean(all_skills_wage$a_mean)
+summary_table$SD[1] <- sd(all_skills_wage$tot_emp)
+summary_table$SD[2] <- sd(all_skills_wage$a_mean)
+
+knitr::kable(summary_table)
 ```
 
 #### All Skills
@@ -60,7 +67,8 @@ freq_all_skill<-table(all_skills_mos$skill) %>% as.data.table()
 freq_all_skill<-freq_all_skill[order(-N)] %>% top_n(10)
 ggplot(freq_all_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (All) Frequency")+
-  scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))+guides(x =  guide_axis(angle = 45))
+  scale_x_discrete(labels = str_wrap(freq_all_skill$V1, width = 8))+
+  guides(x =  guide_axis(angle = 45))
 ```
 
 
@@ -74,7 +82,8 @@ freq_specialized_skill<-all_skills_mos_specialized %>% select(target, freq) %>% 
 freq_specialized_skill<-freq_specialized_skill[order(-freq)] %>% unique() %>% top_n(10)
 ggplot(freq_specialized_skill, aes(x=reorder(target, -freq), y=freq))+geom_bar(stat='identity', fill=colors[1]) +
   labs(x = "Skill Frequency", y = NULL, title = "Army SOC Code Skills (Specialized)")+
-  scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))
+  scale_x_discrete(labels = str_wrap(freq_specialized_skill$target, width = 8))+
+  guides(x =  guide_axis(angle = 45))
 ```
 
 
