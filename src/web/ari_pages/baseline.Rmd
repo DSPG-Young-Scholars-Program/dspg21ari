@@ -70,6 +70,10 @@ summary_table$Mean[1] <- mean(baseline_skills_wage$tot_emp)
 summary_table$Mean[2] <- mean(baseline_skills_wage$a_mean)
 summary_table$SD[1] <- sd(baseline_skills_wage$tot_emp)
 summary_table$SD[2] <- sd(baseline_skills_wage$a_mean)
+summary_table$Min[1] <- min(baseline_skills_wage$tot_emp)
+summary_table$Min[2] <- min(baseline_skills_wage$a_mean)
+summary_table$Max[1] <- max(baseline_skills_wage$tot_emp)
+summary_table$Max[2] <- max(baseline_skills_wage$a_mean)
 
 knitr::kable(summary_table)
 ```
