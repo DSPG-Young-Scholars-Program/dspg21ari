@@ -334,119 +334,49 @@ $(document).ready(function () {
    document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
 
 </script>
-<p>The first piece of our analysis begins with learning about baseline skills. This was a definition from Burning Glass and includes soft and more generalized skills for the workplace. These skills are seen across most SOC and MOS codes because of how general they are. However, these are highly employable skills and therefore important to Veterans for their resumes.</p>
+<p>The first piece of our analysis begins with learning about baseline skills. This was a definition from Burning Glass and includes soft and more generalized skills for the workplace. These skills are seen across most SOC and MOS codes because of how general they are; however, these are highly employable skills and therefore important to veterans for their resumes.</p>
 <div id="exploratory-data-analysis" class="section level3">
 <h3>Exploratory Data Analysis</h3>
-<p>Within baseline skills, Army personnel have opportunities to fill an average of 185,900 jobs within each SOC code. They have an opportunty to earn an average of 51,000 dollars in these same jobs. This is an average across 170 jobs, therefore there is room for upwards of 31 million veterans to earn jobs in these fields, if they only served veteran groups.</p>
-<table style="text-align:center">
-<tr>
-<td colspan="8" style="border-bottom: 1px solid black">
-</td>
+<p>Within baseline skills, Army personnel have opportunities to fill an average of 185,900 jobs within each SOC code. They have an opportunity to earn an average of 51,000 dollars in these same jobs. This is an average across 170 jobs, therefore there is room for upwards of 31 million veterans to earn jobs in these fields, if they only served veteran groups.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variables</th>
+<th align="right">Mean</th>
+<th align="right">SD</th>
 </tr>
-<tr>
-<td style="text-align:left">
-Statistic
-</td>
-<td>
-N
-</td>
-<td>
-Mean
-</td>
-<td>
-St. Dev.
-</td>
-<td>
-Min
-</td>
-<td>
-Pctl(25)
-</td>
-<td>
-Pctl(75)
-</td>
-<td>
-Max
-</td>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Employment</td>
+<td align="right">185950.94</td>
+<td align="right">431133.17</td>
 </tr>
-<tr>
-<td colspan="8" style="border-bottom: 1px solid black">
-</td>
+<tr class="even">
+<td align="left">Salary</td>
+<td align="right">51009.41</td>
+<td align="right">15686.11</td>
 </tr>
-<tr>
-<td style="text-align:left">
-Employment
-</td>
-<td>
-170
-</td>
-<td>
-185,950.900
-</td>
-<td>
-431,133.200
-</td>
-<td>
-160
-</td>
-<td>
-20,342.5
-</td>
-<td>
-146,895
-</td>
-<td>
-4,317,950
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-Salary
-</td>
-<td>
-170
-</td>
-<td>
-51,009.410
-</td>
-<td>
-15,686.110
-</td>
-<td>
-25,510
-</td>
-<td>
-39,335
-</td>
-<td>
-59,167.5
-</td>
-<td>
-120,140
-</td>
-</tr>
-<tr>
-<td colspan="8" style="border-bottom: 1px solid black">
-</td>
-</tr>
+</tbody>
 </table>
 <div id="skill-frequency" class="section level5">
 <h5>Skill Frequency</h5>
-<p>The most common baseline skills acrued in the Army are highly employable and salient skills. Thse include communication, organization, detail-orientation, problem solving, and excel. These skills are common to the Army and civilian jobs and should be included on resumes by veterans to highlight how translatable their skills are from the Army to civilian life.</p>
+<p>The most common baseline skills accrued in the Army are highly employable and salient skills. These include communication, organization, detail-orientation, problem solving, and excel. These skills are common to the Army and civilian jobs and should be included on resumes by veterans to highlight how translatable their skills are from the Army to civilian life.</p>
 <p><img src="baseline_files/figure-html/Baseline%20Skill%20Frequency-1.png" width="672" /></p>
 </div>
 <div id="unique-skills" class="section level4">
 <h4>Unique Skills</h4>
-<p>We define unique skills as those not present in all 10 MOS's. Across thesse 10, the most unique are types of languages learned. Tis signals that language acquisititon is the most unique of skill traits to come out of Army jobs. This inherently mamkes sense. In the Army you'll learn lots of similar baseline skills like communication, physical skills, and discipline, but langauges are more tuned to which specific job you may do.</p>
+<p>We define unique skills as those that are not present in all 10 MOS's. Across these 10, the most unique are types of languages learned. Tis signals that language acquisition is the most unique of skill traits to come out of Army jobs. This inherently makes sense. In the Army you'll learn lots of similar baseline skills like communication, physical skills, and discipline, but languages are more tuned to which specific job you may do.</p>
 <p><img src="baseline_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p><img src="baseline_files/figure-html/Part%202-1.png" width="672" /></p>
 </div>
 </div>
 <div id="networks" class="section level3">
 <h3>Networks</h3>
+<p>Each of the top 10 MOS's possess an overlapping set of baseline skills, thus, indicating that veterans, despite which Army job they may occupy, will likely acquire similar baseline skills. The one exception may be for the Infantryman job which, as indicated by its smaller node and text size, contains fewer of these skills.</p>
 <div class="figure">
-<img src="images/baseline.png" alt="Baseline skills network" />
-<p class="caption">Baseline skills network</p>
+<img src="images/baseline.png" />
+
 </div>
 </div>
 

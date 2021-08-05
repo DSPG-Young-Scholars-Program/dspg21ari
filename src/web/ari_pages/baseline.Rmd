@@ -13,7 +13,7 @@ output:
 ```
 
 
-The first piece of our analysis begins with learning about baseline skills. This was a definition from Burning Glass and includes soft and more generalized skills for the workplace. These skills are seen across most SOC and MOS codes because of how general they are. However, these are highly employable skills and therefore important to Veterans for their resumes.
+The first piece of our analysis begins with learning about baseline skills. This was a definition from Burning Glass and includes soft and more generalized skills for the workplace. These skills are seen across most SOC and MOS codes because of how general they are; however, these are highly employable skills and therefore important to veterans for their resumes. 
 
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -55,7 +55,7 @@ mos_2<-c('Intelligence Analyst', "M1 Armor Crewman", "Military Police", "Unit Su
 
 ### Exploratory Data Analysis
 
-Within baseline skills, Army personnel have opportunities to fill an average of 185,900 jobs within each SOC code. They have an opportunty to earn an average of 51,000 dollars in these same jobs. This is an average across 170 jobs, therefore there is room for upwards of 31 million veterans to earn jobs in these fields, if they only served veteran groups.
+Within baseline skills, Army personnel have opportunities to fill an average of 185,900 jobs within each SOC code. They have an opportunity to earn an average of 51,000 dollars in these same jobs. This is an average across 170 jobs, therefore there is room for upwards of 31 million veterans to earn jobs in these fields, if they only served veteran groups.
 
 ```{r Summary Statistics, echo=FALSE}
 baseline_skills_wage<-all_skills_soc %>% select(socname, tot_emp, a_mean) %>% unique()
@@ -76,7 +76,7 @@ knitr::kable(summary_table)
 
 #####  Skill Frequency
 
-The most common baseline skills acrued in the Army are highly employable and salient skills. Thse include communication, organization, detail-orientation, problem solving, and excel. These skills are common to the Army and civilian jobs and should be included on resumes by veterans to highlight how translatable their skills are from the Army to civilian life.
+The most common baseline skills accrued in the Army are highly employable and salient skills. These include communication, organization, detail-orientation, problem solving, and excel. These skills are common to the Army and civilian jobs and should be included on resumes by veterans to highlight how translatable their skills are from the Army to civilian life. 
 
 ```{r Baseline Skill Frequency, echo=FALSE}
 freq_skill<-table(soc_skills$skill) %>% as.data.table()
@@ -134,7 +134,7 @@ ggplot(freq_skill, aes(x=reorder(V1, -N), y=N))+geom_bar(stat='identity', fill=c
 ```
 #### Unique Skills
 
-We define unique skills as those not present in all 10 MOS's. Across thesse 10, the most unique are types of languages learned. Tis signals that language acquisititon is the most unique of skill traits to come out of Army jobs. This inherently mamkes sense. In the Army you'll learn lots of similar baseline skills like communication, physical skills, and discipline, but langauges are more tuned to which specific job you may do.
+We define unique skills as those that are not present in all 10 MOS's. Across these 10, the most unique are types of languages learned. Tis signals that language acquisition is the most unique of skill traits to come out of Army jobs. This inherently makes sense. In the Army you'll learn lots of similar baseline skills like communication, physical skills, and discipline, but languages are more tuned to which specific job you may do.
 
 ```{r, echo=FALSE}
 skill_uq %>%
@@ -177,4 +177,7 @@ skill_uq %>%
 ```
 
 ### Networks
-![Baseline skills network](./images/baseline.png) 
+Each of the top 10 MOS's possess an overlapping set of baseline skills, thus, indicating that veterans, despite which Army job they may occupy, will likely acquire similar baseline skills. The one exception may be for the Infantryman job which, as indicated by its smaller node and text size, contains fewer of these skills.
+
+![](./images/baseline.png) 
+

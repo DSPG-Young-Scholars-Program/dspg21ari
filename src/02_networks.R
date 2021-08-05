@@ -109,7 +109,7 @@ all_long <- read_rds("/sfs/qumulo/qhome/mes5bu/git/ari3/data/working/all_soc_ski
 mos_skill_long <- left_join(crosswalk, all_long, by = c("O*NET-SOC Code" = "onet"))
 mos_skill_long$skill_type <- ifelse(mos_skill_long$isbaseline == T, "Baseline",
                                     ifelse(mos_skill_long$issoftware == T, "Software", "Specialized"))
-skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean)) %>%
+skill_mos <- mos_skill_long %>% transmute(source = `Army MOS Title`, target = skill, employ = tot_emp, salary = as.numeric(a_mean), skill_type) %>%
   group_by(source, target) %>%
   mutate(n = n()) %>%
   ungroup %>%

@@ -9,6 +9,8 @@ output:
    document.getElementsByClassName('navbar-header')[0].style = 'margin-top:-10px;'
 ```
 
+The second piece of our analysis starts with learning about software and specialized skill. This was a definition from Burning Glass and includes more specific skills than those of their baseline definition. These are highly employable skills and therefore important to Veterans for their resumes.
+
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
@@ -17,6 +19,7 @@ root.dir = rprojroot::find_rstudio_root_file()
 ```
 
 ```{r setup, include=FALSE}
+setwd(root.dir)
 library(data.table)
 library(tidytable)
 library(maditr)
@@ -57,6 +60,10 @@ summary_table$Mean[1] <- mean(all_skills_wage$tot_emp)
 summary_table$Mean[2] <- mean(all_skills_wage$a_mean)
 summary_table$SD[1] <- sd(all_skills_wage$tot_emp)
 summary_table$SD[2] <- sd(all_skills_wage$a_mean)
+summary_table$Min[1] <- min(all_skills_wage$tot_emp)
+summary_table$Min[2] <- min(all_skills_wage$a_mean)
+summary_table$Max[1] <- max(all_skills_wage$tot_emp)
+summary_table$Max[2] <- max(all_skills_wage$a_mean)
 
 knitr::kable(summary_table)
 ```
@@ -288,7 +295,7 @@ all_skill %>%
   guides(x =  guide_axis(angle = 45))
 ```
 
-Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistent across MOS. This could be due to the number of overlapping skills and jobs shared across SOC codes, which are common amongst all MOS.
+Based on the salary for each MOS based on their skill, the average salary for jobs acquired by soldiers once leaving the army based on their skills is consistent across MOS. This could be due to the number of overlapping skills and jobs shared across SOC codes, which are common among all MOS.
 
 # Baseline Skill Top 10 Percentages
 
@@ -345,10 +352,16 @@ ggplot(all_skills_mos_software_top, aes(fill=str_wrap(skill, 10), y=freq, x=`Arm
   theme(text=element_text(size=9), legend.text=element_text(size=7))+guides(x =  guide_axis(angle = 45))
 ```
 
-The software skills have the most consistent set of top 10 skills across MOS, with most sharing the same set of 10 skills. Some outliers include SQL for military police and AutoCAD for cannon crewmembers, infantrymen and M1 Armor Crewmen.
+The software skills have the most consistent set of top 10 skills across MOS, with most sharing the same set of 10 skills. Some outliers include SQL for military police and AutoCAD for cannon crew-members, infantrymen and M1 Armor Crewmen.
 
 
 ### Networks
-![All skills network](./images/all_skills.png) 
 
-![linking MOS and SOC codes](./images/mos_soc.png) 
+In order to better understand the connections of MOS's and SOC codes or skills we created networks in Gephi. These two networks help us visualize what the connections look like. In the first network we have connected unique (skills connected to 9 or fewer MOS's) skills to the top 10 MOS's. The node sizes indicated degree of connectivity of MOS's and skills. The colors of the nodes and edges also indicate how well connected a node is, wherein darker is more connected. From this network we can see that languages are the most connected of all of the unique skills, and Unite Supply Specialist has the most unique skills. The least connected skills are AppleWorks and Notepad and the least unique MOS is Infantryman.
+
+![](./images/all_skills.png) 
+
+
+In the second network we have connected SOC codes to the top 10 MOS's. The node sizes indicated degree of connectivity of MOS's and jobs The colors of the nodes and edges also indicate how well connected a node is, wherein darker is more connected. From this network we can see that there is a lot of connection between MOS's and SOC codes. This indicates that the crosswalk may not be a unique estimator of skills gained in an MOS. This also may indicate that simply being a member of the Army could prepare you for multiple jobs, but not well differentiated jobs.
+
+![](./images/mos_soc.png) 
