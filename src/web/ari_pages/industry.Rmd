@@ -17,7 +17,7 @@ One of the ways we wanted to highlight strengths and weaknesses of skills gained
 
 ## Army and Non-Army SOC Skills
 
-Within the skills that are shared by matched an unmatched SOC codes there is frequenct crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for facebook, microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
+Within the skills that are shared by matched an unmatched SOC codes there is frequent crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for Facebook, Microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -68,7 +68,7 @@ army_health <- army_health %>%
 
 ## Similar Skills
 
-Within the skills that are shared by matched an unmatched SOC codes there is frequenct crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for facebook, microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
+Within the skills that are shared by matched an unmatched SOC codes there is frequent crossover, in baseline skills both groups show preferences for communication skills, physical abilities, and organizational skills. Within Software there are preferences for Facebook, Microsoft operation systems, and SAP. Specialized skills contain teamwork, scheduling, and customer service within both groups. Of these three types of skills there are the most differences in software skills, which is understandable. Across the board soft skills in baseline and specialized skill types are easier to pick up in any field but software skills are harder to learn outside of a specific job.
 
 ```{r non unique graphs, echo=FALSE}
 non_army_health$skill_type <- as.factor(non_army_health$skill_type)
@@ -112,7 +112,7 @@ fig2
 
 ## Unmatched Skills
 
-Within the skills that are different in matched an unmatched SOC codes there are large differences, but also small numbers of non-connected skills. This shows that most skills can be gained in the army that can translate into jobs in healthcare, even jobs that are different from Army jobs. Baseline skills are sparse and very small in their weighted importance. Software and Specialized skills are also small in their weighted importance, but there is a larger list of skills. For example, within Army SOC skills they learn more skills about tools as listed within specialized skills, but non-Army specialized skills contain more analysis or medicine-specific skills. This showcases that the Army provides their officers with more bue-collar working skills than more specialized medical skills.
+Within the skills that are different in matched an unmatched SOC codes there are large differences, but also small numbers of non-connected skills. This shows that most skills can be gained in the army that can translate into jobs in healthcare, even jobs that are different from Army jobs. Baseline skills are sparse and very small in their weighted importance. Software and Specialized skills are also small in their weighted importance, but there is a larger list of skills. For example, within Army SOC skills they learn more skills about tools as listed within specialized skills, but non-Army specialized skills contain more analysis or medicine-specific skills. This showcases that the Army provides their officers with more blue-collar working skills than more specialized medical skills.
 
 ```{r unique graphs, echo= FALSE}
 fig3 <- non_army_health %>%

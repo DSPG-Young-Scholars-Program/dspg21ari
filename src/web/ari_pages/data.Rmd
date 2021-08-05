@@ -15,12 +15,12 @@ output:
 
 ### Occupational Information Network (O*NET)
 
-[Occupational Information Network (O*NET)](https://www.onetonline.org/) is an online database that provides information on occupations and is a resource to job seekers and vetrans who are looking for work. O*NET produced a [crosswalk](https://www.onetcenter.org/crosswalks.html) of Army Jobs and Standard Occupation Classification (SOC) Codes. SOC codes are a federal standardization of jobs that helps classify occupational data. [This crosswalk was produced to connect the 10 largest Army jobs, commonly referred to as military occupational specialties (MOS), to civilian skills](https://www.rand.org/pubs/research_reports/RR1719.html). 
+[Occupational Information Network (O*NET)](https://www.onetonline.org/) is an online database that provides information on occupations and is a resource to job seekers and veterans who are looking for work. O*NET produced a [crosswalk](https://www.onetcenter.org/crosswalks.html) of Army Jobs and Standard Occupation Classification (SOC) Codes. SOC codes are a federal standardization of jobs that helps classify occupational data. [This crosswalk was produced to connect the 10 largest Army jobs, commonly referred to as military occupational specialties (MOS), to civilian skills](https://www.rand.org/pubs/research_reports/RR1719.html). 
 This crosswalk was created by surveying Army officers' knowledge, skill, and abilities (KSAs) to measure what skills would be necessary for their jobs and which civilian jobs best mimicked these KSAs. This was also a way of understanding which civilian occupations prepared individuals to best perform in these 10 Army jobs. This is a part of larger works on veteran transitions from the military to civilian life.
 
 ### Burning Glass
 
-[Burning Glass](https://www.burning-glass.com/) data is proprietary data source which scrapes job advertisments and resumes to create panel data on jobs. This data sourice provided us with skills that are listed on job advertisements across multiple SOC cpdodes. For each SOC code there are types of skills required for jobs and therefore when attaching these skills to SOC codes that similar to Army jobs we're able to create a vector of skills gained within the Army that they could use for their resumes.
+[Burning Glass](https://www.burning-glass.com/) data is proprietary data source which scrapes job advertisements and resumes to create panel data on jobs. This data source provided us with skills that are listed on job advertisements across multiple SOC codes. For each SOC code there are types of skills required for jobs and therefore when attaching these skills to SOC codes that similar to Army jobs we're able to create a vector of skills gained within the Army that they could use for their resumes.
 
 ### Bureau of Labor Statistics
 
